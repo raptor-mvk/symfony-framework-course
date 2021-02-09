@@ -1,0 +1,13 @@
+{% import 'macros.twig' as macros %}
+{% extends 'layout.twig' %}
+{% block title %}
+User Vue table
+{% endblock %}
+{% block body %}
+<div ref="users" data-users="{{ users }}">
+</div>
+
+<div id="app">
+   <app></app>
+</div>
+{% endblock %}

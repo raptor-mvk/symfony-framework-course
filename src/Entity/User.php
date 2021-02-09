@@ -87,4 +87,14 @@ class User
     {
         $this->phone = $phone;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'firstName' => $this->firstName,
+            'middleName' => $this->middleName,
+            'lastName' => $this->lastName,
+            'phone' => $this->phone,
+        ];
+    }
 }

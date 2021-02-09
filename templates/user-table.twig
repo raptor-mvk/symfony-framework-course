@@ -1,13 +1,13 @@
 {% extends 'layout.twig' %}
 {% import 'macros.twig' as macros %}
 {% block title %}
-   User table
+User table
 {% endblock %}
 {% block body %}
-   <table>
-       <tbody>
+<table class="table table-hover">
+    <tbody>
        <tr><th>Телефон</th><th>Имя</th><th>Отчество</th><th>Фамилия</th></tr>
        {{ macros.user_row(users) }}
-       </tbody>
-   </table>
+    </tbody>
+</table>
 {% endblock %}

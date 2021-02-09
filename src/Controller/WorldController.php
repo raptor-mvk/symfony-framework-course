@@ -2,12 +2,21 @@
 
 namespace App\Controller;
 
+use App\Service\UserService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class WorldController
+class WorldController extends AbstractController
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function hello(): Response
     {
-        return new Response('<html><body><h1><b>Hello,</b> <i>world</i>!</h1></body></html>');
+        return $this->render('user-vue.twig', ['users' => json_encode($this->userService->getUsersListVue())]);
     }
 }

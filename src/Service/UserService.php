@@ -85,4 +85,18 @@ class UserService
 
         return $repository->findBy(['login' => $name]);
     }
+
+    /**
+     * @return array<User>
+     */
+    public function findUsersByCriteria(string $login): array
+    {
+        $criteria = Criteria::create();
+        /** @noinspection NullPointerExceptionInspection */
+        $criteria->andWhere(Criteria::expr()->eq('login', $login));
+        /** @var EntityRepository $repository */
+        $repository = $this->entityManager->getRepository(User::class);
+
+        return $repository->matching($criteria)->toArray();
+    }
 }

@@ -5,7 +5,10 @@ namespace App\Service;
 use App\Entity\Subscription;
 use App\Entity\Tweet;
 use App\Entity\User;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ObjectRepository;
 
 class UserService
 {
@@ -71,5 +74,15 @@ class UserService
         $user = $repository->find($id);
 
         return $user instanceof User ? $user : null;
+    }
+
+    /**
+     * @return array<User>
+     */
+    public function findUsersByLogin(string $name): array
+    {
+        $repository = $this->entityManager->getRepository(User::class);
+
+        return $repository->findBy(['login' => $name]);
     }
 }

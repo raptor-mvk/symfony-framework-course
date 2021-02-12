@@ -117,6 +117,13 @@ class User
         }
     }
 
+    public function addAuthor(User $author): void
+    {
+        if (!$this->authors->contains($author)) {
+            $this->authors->add($author);
+        }
+    }
+
     public function toArray(): array
     {
         return [

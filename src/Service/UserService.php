@@ -39,6 +39,12 @@ class UserService
         $this->entityManager->flush();
     }
 
+    public function subscribeUser(User $author, User $follower): void
+    {
+        $author->addFollower($follower);
+        $this->entityManager->flush();
+    }
+
     public function clearEntityManager(): void
     {
         $this->entityManager->clear();

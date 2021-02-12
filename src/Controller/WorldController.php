@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,11 +18,8 @@ class WorldController extends AbstractController
 
     public function hello(): Response
     {
-        $author = $this->userService->create('J.R.R. Tolkien');
-        $follower = $this->userService->create('Ivan Ivanov');
-        $this->userService->subscribeUser($author, $follower);
-        $this->userService->addSubscription($author, $follower);
+        $users = $this->userService->findUsersByLogin('Ivan Ivanov');
 
-        return $this->json([$author->toArray(), $follower->toArray()]);
+        return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
     }
 }

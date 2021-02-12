@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Tweet;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -24,5 +25,16 @@ class UserService
         $this->entityManager->flush();
 
         return $user;
+    }
+
+    public function postTweet(User $author, string $text): void
+    {
+        $tweet = new Tweet();
+        $tweet->setAuthor($author);
+        $tweet->setText($text);
+        $tweet->setCreatedAt();
+        $tweet->setUpdatedAt();
+        $this->entityManager->persist($tweet);
+        $this->entityManager->flush();
     }
 }

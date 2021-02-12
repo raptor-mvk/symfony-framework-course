@@ -18,9 +18,9 @@ class WorldController extends AbstractController
     public function hello(): Response
     {
         $author = $this->userService->create('J.R.R. Tolkien');
-        $this->userService->postTweet($author, 'The Lord of the Rings');
-        $this->userService->postTweet($author, 'The Hobbit');
+        $follower = $this->userService->create('Ivan Ivanov');
+        $this->userService->subscribeUser($author, $follower);
 
-        return $this->json($author->toArray());
+        return $this->json([$author->toArray(), $follower->toArray()]);
     }
 }

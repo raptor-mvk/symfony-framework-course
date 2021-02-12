@@ -234,7 +234,7 @@
 1. Обновляем страницу в браузере, видим, что вместо списка выведена таблица
 1. Создаём файл `templates/macros.twig`
     ```html
-    {% macro user_row(users) %}
+    {% macro user_table_body(users) %}
          {% for user in users %}
              <tr><td>({{ user.phone }})</td><td>{{ user.firstName|lower }}</td><td>{{ user.middleName|upper }}</td><td>{{ user.lastName }}</td></tr>
          {% endfor %}
@@ -251,7 +251,7 @@
     <table>
          <tbody>
              <tr><th>Телефон</th><th>Имя</th><th>Отчество</th><th>Фамилия</th></tr>
-             {{ macros.user_row(users) }}
+             {{ macros.user_table_body(users) }}
          </tbody>
     </table>
     {% endblock %}
@@ -461,7 +461,7 @@
 1. Создаём файл `templates/user-vue.twig`
     ```html
     {% import 'macros.twig' as macros %}
-    {% extends 'layout2.twig' %}
+    {% extends 'layout.twig' %}
     {% block title %}
     User list
     {% endblock %}

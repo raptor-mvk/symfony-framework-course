@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Subscription;
 use App\Entity\Tweet;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,6 +44,19 @@ class UserService
     {
         $author->addFollower($follower);
         $follower->addAuthor($author);
+        $this->entityManager->flush();
+    }
+
+    public function addSubscription(User $author, User $follower): void
+    {
+        $subscription = new Subscription();
+        $subscription->setAuthor($author);
+        $subscription->setFollower($follower);
+        $subscription->setCreatedAt();
+        $subscription->setUpdatedAt();
+        $author->addSubscriptionFollower($subscription);
+        $follower->addSubscriptionAuthor($subscription);
+        $this->entityManager->persist($subscription);
         $this->entityManager->flush();
     }
 

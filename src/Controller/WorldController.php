@@ -20,6 +20,7 @@ class WorldController extends AbstractController
         $author = $this->userService->create('J.R.R. Tolkien');
         $follower = $this->userService->create('Ivan Ivanov');
         $this->userService->subscribeUser($author, $follower);
+        $this->userService->addSubscription($author, $follower);
 
         return $this->json([$author->toArray(), $follower->toArray()]);
     }

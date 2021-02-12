@@ -87,6 +87,13 @@ class User
         $this->updatedAt = new DateTime();
     }
 
+    public function addTweet(Tweet $tweet): void
+    {
+        if (!$this->tweets->contains($tweet)) {
+            $this->tweets->add($tweet);
+        }
+    }
+
     public function toArray(): array
     {
         return [

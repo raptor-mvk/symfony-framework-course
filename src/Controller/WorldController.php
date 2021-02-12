@@ -20,6 +20,9 @@ class WorldController extends AbstractController
         $author = $this->userService->create('J.R.R. Tolkien');
         $this->userService->postTweet($author, 'The Lord of the Rings');
         $this->userService->postTweet($author, 'The Hobbit');
+        $authorId = $author->getId();
+        $this->userService->clearEntityManager();
+        $author = $this->userService->findUser($authorId);
 
         return $this->json($author->toArray());
     }

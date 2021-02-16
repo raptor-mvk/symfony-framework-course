@@ -23,7 +23,7 @@ class WorldController extends AbstractController
         if ($user === null) {
             return $this->json([], Response::HTTP_NOT_FOUND);
         }
-        $this->userService->updateUserLoginWithQueryBuilder($user->getId(), 'User is updated twice');
+        $this->userService->updateUserLoginWithDBALQueryBuilder($user->getId(), 'User is updated twice');
         $this->userService->clearEntityManager();
         $user = $this->userService->findUser($userId);
 

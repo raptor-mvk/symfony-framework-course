@@ -127,4 +127,19 @@ class UserService
 
         $queryBuilder->getQuery()->execute();
     }
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function updateUserLoginWithDBALQueryBuilder(int $userId, string $login): void
+    {
+        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
+        $queryBuilder->update('"user"','u')
+            ->set('login', ':userLogin')
+            ->where($queryBuilder->expr()->eq('u.id', ':userId'))
+            ->setParameter('userId', $userId)
+            ->setParameter('userLogin', $login);
+
+        $queryBuilder->execute();
+    }
 }

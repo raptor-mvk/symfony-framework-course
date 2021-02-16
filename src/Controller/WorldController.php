@@ -18,10 +18,8 @@ class WorldController extends AbstractController
 
     public function hello(): Response
     {
-        $user = $this->userService->create('Terry Pratchett');
-        sleep(1);
-        $this->userService->updateUserLogin($user, 'Lewis Carroll');
+        $users = $this->userService->findUsersWithQueryBuilder('Lewis');
 
-        return $this->json($user->toArray());
+        return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
     }
 }

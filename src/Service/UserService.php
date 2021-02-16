@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
+use function Doctrine\ORM\QueryBuilder;
 
 class UserService
 {
@@ -102,5 +103,16 @@ class UserService
         $repository = $this->entityManager->getRepository(User::class);
 
         return $repository->matching($criteria)->toArray();
+    }
+
+    public function findUsersWithQueryBuilder(string $login): array
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->andWhere($queryBuilder->expr()->like('u.login',':userLogin'))
+            ->setParameter('userLogin', "%$login%");
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

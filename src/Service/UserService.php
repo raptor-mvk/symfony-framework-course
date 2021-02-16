@@ -115,4 +115,16 @@ class UserService
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function updateUserLoginWithQueryBuilder(int $userId, string $login): void
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->update(User::class,'u')
+            ->set('u.login', ':userLogin')
+            ->where($queryBuilder->expr()->eq('u.id', ':userId'))
+            ->setParameter('userId', $userId)
+            ->setParameter('userLogin', $login);
+
+        $queryBuilder->getQuery()->execute();
+    }
 }

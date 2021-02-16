@@ -142,4 +142,15 @@ class UserService
 
         $queryBuilder->execute();
     }
+
+    public function findUserWithTweetsWithQueryBuilder(int $userId): array
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where($queryBuilder->expr()->eq('u.id', ':userId'))
+            ->setParameter('userId', $userId);
+    
+        return $queryBuilder->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+    }
 }

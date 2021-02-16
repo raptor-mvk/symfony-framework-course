@@ -18,12 +18,15 @@ class WorldController extends AbstractController
 
     public function hello(): Response
     {
-        $user = $this->userService->findUser(3);
+        $userId = 5;
+        $user = $this->userService->findUser($userId);
         if ($user === null) {
             return $this->json([], Response::HTTP_NOT_FOUND);
         }
-        $this->userService->updateUserLoginWithQueryBuilder($user->getId(), 'User is updated');
-    
+        $this->userService->updateUserLoginWithQueryBuilder($user->getId(), 'User is updated twice');
+        $this->userService->clearEntityManager();
+        $user = $this->userService->findUser($userId);
+
         return $this->json($user->toArray());
     }
 }

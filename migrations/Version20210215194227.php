@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210215164758 extends AbstractMigration
+final class Version20210215194227 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -21,10 +21,10 @@ final class Version20210215164758 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE subscription (id BIGSERIAL NOT NULL, author_id BIGINT DEFAULT NULL, follower_id BIGINT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_A3C664D3F675F31B ON subscription (author_id)');
-        $this->addSql('CREATE INDEX IDX_A3C664D3AC24F853 ON subscription (follower_id)');
+        $this->addSql('CREATE INDEX subscription__author_id__ind ON subscription (author_id)');
+        $this->addSql('CREATE INDEX subscription__follower_id__ind ON subscription (follower_id)');
         $this->addSql('CREATE TABLE tweet (id BIGSERIAL NOT NULL, author_id BIGINT DEFAULT NULL, text VARCHAR(140) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_3D660A3BF675F31B ON tweet (author_id)');
+        $this->addSql('CREATE INDEX tweet__author_id__ind ON tweet (author_id)');
         $this->addSql('CREATE TABLE "user" (id BIGSERIAL NOT NULL, login VARCHAR(32) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE author_follower (author_id BIGINT NOT NULL, follower_id BIGINT NOT NULL, PRIMARY KEY(author_id, follower_id))');
         $this->addSql('CREATE INDEX IDX_564623F3F675F31B ON author_follower (author_id)');

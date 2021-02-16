@@ -6,7 +6,13 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="subscription")
+ * @ORM\Table(
+ *     name="subscription",
+ *     indexes={
+ *         @ORM\Index(name="subscription__author_id__ind", columns={"author_id"}),
+ *         @ORM\Index(name="subscription__follower_id__ind", columns={"follower_id"})
+ *     }
+ * )
  * @ORM\Entity
  */
 class Subscription

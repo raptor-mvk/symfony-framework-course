@@ -21,7 +21,7 @@ class WorldController extends AbstractController
         $author = $this->userService->create('Charles Dickens');
         $this->userService->postTweet($author, 'Oliver Twist');
         $this->userService->postTweet($author, 'The Christmas Carol');
-        $userData = $this->userService->findUserWithTweetsWithQueryBuilder($author->getId());
+        $userData = $this->userService->findUserWithTweetsWithDBALQueryBuilder($author->getId());
 
         return $this->json($userData);
     }

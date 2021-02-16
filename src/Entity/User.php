@@ -7,11 +7,11 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="`user`")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks()
  */
 class User implements HasMetaTimestampsInterface
 {
@@ -31,13 +31,13 @@ class User implements HasMetaTimestampsInterface
 
     /**
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     * @Gedmo\Timestampable(on="create")
      */
     private DateTime $createdAt;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     * @Gedmo\Timestampable(on="update")
      */
     private DateTime $updatedAt;
 
@@ -92,9 +92,6 @@ class User implements HasMetaTimestampsInterface
         return $this->createdAt;
     }
 
-    /**
-     * @ORM\PrePersist()
-     */
     public function setCreatedAt(): void {
         $this->createdAt = new DateTime();
     }
@@ -103,10 +100,6 @@ class User implements HasMetaTimestampsInterface
         return $this->updatedAt;
     }
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
     public function setUpdatedAt(): void {
         $this->updatedAt = new DateTime();
     }

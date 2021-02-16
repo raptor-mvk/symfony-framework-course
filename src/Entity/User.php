@@ -1,100 +1,139 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Table(name="`user`")
+ * @ORM\Entity
+ */
 class User
 {
-    private string $firstName;
-    private string $middleName;
-    private string $lastName;
-    private string $phone;
+    /**
+     * @ORM\Column(name="id", type="bigint", unique=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private ?int $id = null;
 
     /**
-     * User constructor.
-     * @param string $firstName
-     * @param string $middleName
-     * @param string $lastName
-     * @param string $phone
+     * @var string
+     *
+     * @ORM\Column(type="string", length=32, nullable=false)
      */
-    public function __construct(string $firstName, string $middleName, string $lastName, string $phone)
+    private string $login;
+
+    /**
+     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     */
+    private DateTime $createdAt;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     */
+    private DateTime $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Tweet", mappedBy="author")
+     */
+    private Collection $tweets;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="followers")
+     */
+    private Collection $authors;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="authors")
+     * @ORM\JoinTable(
+     *     name="author_follower",
+     *     joinColumns={@ORM\JoinColumn(name="author_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="follower_id", referencedColumnName="id")}
+     * )
+     */
+    private Collection $followers;
+
+    public function __construct()
     {
-        $this->firstName = $firstName;
-        $this->middleName = $middleName;
-        $this->lastName = $lastName;
-        $this->phone = $phone;
+        $this->tweets = new ArrayCollection();
+        $this->authors = new ArrayCollection();
+        $this->followers = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstName(): string
+    public function getId(): int
     {
-        return $this->firstName;
+        return $this->id;
     }
 
-    /**
-     * @param string $firstName
-     */
-    public function setFirstName(string $firstName): void
+    public function setId(int $id): void
     {
-        $this->firstName = $firstName;
+        $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
-    public function getMiddleName(): string
+    public function getLogin(): string
     {
-        return $this->middleName;
+        return $this->login;
     }
 
-    /**
-     * @param string $middleName
-     */
-    public function setMiddleName(string $middleName): void
+    public function setLogin(string $login): void
     {
-        $this->middleName = $middleName;
+        $this->login = $login;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastName(): string
-    {
-        return $this->lastName;
+    public function getCreatedAt(): DateTime {
+        return $this->createdAt;
     }
 
-    /**
-     * @param string $lastName
-     */
-    public function setLastName(string $lastName): void
-    {
-        $this->lastName = $lastName;
+    public function setCreatedAt(): void {
+        $this->createdAt = new DateTime();
     }
 
-    /**
-     * @return string
-     */
-    public function getPhone(): string
-    {
-        return $this->phone;
+    public function getUpdatedAt(): DateTime {
+        return $this->updatedAt;
     }
 
-    /**
-     * @param string $phone
-     */
-    public function setPhone(string $phone): void
+    public function setUpdatedAt(): void {
+        $this->updatedAt = new DateTime();
+    }
+
+    public function addTweet(Tweet $tweet): void
     {
-        $this->phone = $phone;
+        if (!$this->tweets->contains($tweet)) {
+            $this->tweets->add($tweet);
+        }
+    }
+
+    public function addFollower(User $follower): void
+    {
+        if (!$this->followers->contains($follower)) {
+            $this->followers->add($follower);
+        }
+    }
+
+    public function addAuthor(User $author): void
+    {
+        if (!$this->authors->contains($author)) {
+            $this->authors->add($author);
+        }
     }
 
     public function toArray(): array
     {
         return [
-            'firstName' => $this->firstName,
-            'middleName' => $this->middleName,
-            'lastName' => $this->lastName,
-            'phone' => $this->phone,
+            'id' => $this->id,
+            'login' => $this->login,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
+            'tweets' => array_map(static fn(Tweet $tweet) => $tweet->toArray(), $this->tweets->toArray()),
+            'followers' => array_map(static fn(User $user) => $user->getLogin(), $this->followers->toArray()),
+            'authors' => array_map(static fn(User $user) => $user->getLogin(), $this->authors->toArray()),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,8 @@ class WorldController extends AbstractController
 
     public function hello(): Response
     {
-        return $this->render('user-vue.twig', ['users' => json_encode($this->userService->getUsersListVue())]);
+        $users = $this->userService->findUsersByCriteria('J.R.R. Tolkien');
+
+        return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
     }
 }

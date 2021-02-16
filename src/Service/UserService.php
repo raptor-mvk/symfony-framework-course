@@ -29,6 +29,12 @@ class UserService
         return $user;
     }
 
+    public function updateUserLogin(User $user, string $login): void
+    {
+        $user->setLogin($login);
+        $this->entityManager->flush();
+    }
+
     public function postTweet(User $author, string $text): void
     {
         $tweet = new Tweet();

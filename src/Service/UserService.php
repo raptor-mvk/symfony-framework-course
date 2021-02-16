@@ -6,8 +6,10 @@ use App\Entity\Subscription;
 use App\Entity\Tweet;
 use App\Entity\User;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ObjectRepository;
 use function Doctrine\ORM\QueryBuilder;
 
@@ -146,11 +148,12 @@ class UserService
     public function findUserWithTweetsWithQueryBuilder(int $userId): array
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('u')
+        $queryBuilder->select('u', 't')
             ->from(User::class, 'u')
+            ->leftJoin('u.tweets', 't')
             ->where($queryBuilder->expr()->eq('u.id', ':userId'))
             ->setParameter('userId', $userId);
-    
+
         return $queryBuilder->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
     }
 }

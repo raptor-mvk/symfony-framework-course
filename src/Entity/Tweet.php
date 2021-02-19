@@ -6,7 +6,12 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="tweet")
+ * @ORM\Table(
+ *     name="tweet",
+ *     indexes={
+ *         @ORM\Index(name="tweet__author_id__ind", columns={"author_id"})
+ *     }
+ * )
  * @ORM\Entity
  */
 class Tweet

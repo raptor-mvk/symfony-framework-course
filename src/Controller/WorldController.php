@@ -18,8 +18,11 @@ class WorldController extends AbstractController
 
     public function hello(): Response
     {
-        $users = $this->userService->findUsersByCriteria('J.R.R. Tolkien');
+        $author = $this->userService->create('Charles Dickens');
+        $this->userService->postTweet($author, 'Oliver Twist');
+        $this->userService->postTweet($author, 'The Christmas Carol');
+        $userData = $this->userService->findUserWithTweetsWithDBALQueryBuilder($author->getId());
 
-        return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
+        return $this->json($userData);
     }
 }

@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\Symfony\FormatterPass;
+use App\Symfony\GreeterPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
@@ -34,5 +37,11 @@ class Kernel extends BaseKernel
         } elseif (is_file($path = \dirname(__DIR__).'/config/routes.php')) {
             (require $path)($routes->withPath($path), $this);
         }
+    }
+
+    protected function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new FormatterPass());
+        $container->addCompilerPass(new GreeterPass());
     }
 }

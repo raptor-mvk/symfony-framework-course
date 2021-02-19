@@ -2,27 +2,24 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Service\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\FormatService;
+use App\Service\MessageService;
 use Symfony\Component\HttpFoundation\Response;
 
-class WorldController extends AbstractController
+class WorldController
 {
-    private UserService $userService;
+    private FormatService $formatService;
+    private MessageService $messageService;
 
-    public function __construct(UserService $userService)
+    public function __construct(FormatService $formatService, MessageService $messageService)
     {
-        $this->userService = $userService;
+        $this->formatService = $formatService;
+        $this->messageService = $messageService;
     }
 
     public function hello(): Response
     {
-        $author = $this->userService->create('Charles Dickens');
-        $this->userService->postTweet($author, 'Oliver Twist');
-        $this->userService->postTweet($author, 'The Christmas Carol');
-        $userData = $this->userService->findUserWithTweetsWithDBALQueryBuilder($author->getId());
-
-        return $this->json($userData);
+        $result = $this->formatService->format($this->messageService->printMessages('world'));
+        return new Response("<html><body>$result</body></html>");
     }
 }

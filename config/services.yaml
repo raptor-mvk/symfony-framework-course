@@ -50,3 +50,8 @@ services:
         class: App\Service\FormatService
         factory: ['@App\Service\FormatServiceFactory', 'headerFormatService']
         arguments: [1]
+
+    App\Controller\WorldController:
+        arguments:
+            $formatService: '@main_header_formatter'
+        tags: ['controller.service_arguments']

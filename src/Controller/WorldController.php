@@ -2,27 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Service\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\GreeterService;
 use Symfony\Component\HttpFoundation\Response;
 
-class WorldController extends AbstractController
+class WorldController
 {
-    private UserService $userService;
+    private GreeterService $greeterService;
 
-    public function __construct(UserService $userService)
+    public function __construct(GreeterService $greeterService)
     {
-        $this->userService = $userService;
+        $this->greeterService = $greeterService;
     }
 
     public function hello(): Response
     {
-        $author = $this->userService->create('Charles Dickens');
-        $this->userService->postTweet($author, 'Oliver Twist');
-        $this->userService->postTweet($author, 'The Christmas Carol');
-        $userData = $this->userService->findUserWithTweetsWithDBALQueryBuilder($author->getId());
-
-        return $this->json($userData);
+        return new Response("<html><body>{$this->greeterService->greet('world')}</body></html>");
     }
 }

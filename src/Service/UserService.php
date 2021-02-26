@@ -2,173 +2,68 @@
 
 namespace App\Service;
 
-use App\Entity\Subscription;
-use App\Entity\Tweet;
 use App\Entity\User;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\AbstractQuery;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\Persistence\ObjectRepository;
-use function Doctrine\ORM\QueryBuilder;
 
 class UserService
 {
-    private EntityManagerInterface $entityManager;
+    /** @var EntityManagerInterface */
+    private $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    public function create(string $login): User
+    public function saveUser(string $login): ?int
     {
         $user = new User();
         $user->setLogin($login);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        return $user;
+        return $user->getId();
     }
 
-    public function updateUserLogin(User $user, string $login): void
+    public function updateUser(int $userId, string $login): bool
     {
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->entityManager->getRepository(User::class);
+        /** @var User $user */
+        $user = $userRepository->find($userId);
+        if ($user === null) {
+            return false;
+        }
         $user->setLogin($login);
         $this->entityManager->flush();
+
+        return true;
     }
 
-    public function postTweet(User $author, string $text): void
+    public function deleteUser(int $userId): bool
     {
-        $tweet = new Tweet();
-        $tweet->setAuthor($author);
-        $tweet->setText($text);
-        $tweet->setCreatedAt();
-        $tweet->setUpdatedAt();
-        $author->addTweet($tweet);
-        $this->entityManager->persist($tweet);
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->entityManager->getRepository(User::class);
+        /** @var User $user */
+        $user = $userRepository->find($userId);
+        if ($user === null) {
+            return false;
+        }
+        $this->entityManager->remove($user);
         $this->entityManager->flush();
-    }
 
-    public function subscribeUser(User $author, User $follower): void
-    {
-        $author->addFollower($follower);
-        $follower->addAuthor($author);
-        $this->entityManager->flush();
-    }
-
-    public function addSubscription(User $author, User $follower): void
-    {
-        $subscription = new Subscription();
-        $subscription->setAuthor($author);
-        $subscription->setFollower($follower);
-        $subscription->setCreatedAt();
-        $subscription->setUpdatedAt();
-        $author->addSubscriptionFollower($subscription);
-        $follower->addSubscriptionAuthor($subscription);
-        $this->entityManager->persist($subscription);
-        $this->entityManager->flush();
-    }
-
-    public function clearEntityManager(): void
-    {
-        $this->entityManager->clear();
-    }
-
-    public function findUser(int $id): ?User
-    {
-        $repository = $this->entityManager->getRepository(User::class);
-        $user = $repository->find($id);
-
-        return $user instanceof User ? $user : null;
+        return true;
     }
 
     /**
-     * @return array<User>
+     * @return User[]
      */
-    public function findUsersByLogin(string $name): array
+    public function getUsers(int $page, int $perPage): array
     {
-        $repository = $this->entityManager->getRepository(User::class);
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->entityManager->getRepository(User::class);
 
-        return $repository->findBy(['login' => $name]);
-    }
-
-    /**
-     * @return array<User>
-     */
-    public function findUsersByCriteria(string $login): array
-    {
-        $criteria = Criteria::create();
-        /** @noinspection NullPointerExceptionInspection */
-        $criteria->andWhere(Criteria::expr()->eq('login', $login));
-        /** @var EntityRepository $repository */
-        $repository = $this->entityManager->getRepository(User::class);
-
-        return $repository->matching($criteria)->toArray();
-    }
-
-    public function findUsersWithQueryBuilder(string $login): array
-    {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('u')
-            ->from(User::class, 'u')
-            ->andWhere($queryBuilder->expr()->like('u.login',':userLogin'))
-            ->setParameter('userLogin', "%$login%");
-
-        return $queryBuilder->getQuery()->getResult();
-    }
-
-    public function updateUserLoginWithQueryBuilder(int $userId, string $login): void
-    {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->update(User::class,'u')
-            ->set('u.login', ':userLogin')
-            ->where($queryBuilder->expr()->eq('u.id', ':userId'))
-            ->setParameter('userId', $userId)
-            ->setParameter('userLogin', $login);
-
-        $queryBuilder->getQuery()->execute();
-    }
-
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function updateUserLoginWithDBALQueryBuilder(int $userId, string $login): void
-    {
-        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
-        $queryBuilder->update('"user"','u')
-            ->set('login', ':userLogin')
-            ->where($queryBuilder->expr()->eq('u.id', ':userId'))
-            ->setParameter('userId', $userId)
-            ->setParameter('userLogin', $login);
-
-        $queryBuilder->execute();
-    }
-
-    public function findUserWithTweetsWithQueryBuilder(int $userId): array
-    {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('u', 't')
-            ->from(User::class, 'u')
-            ->leftJoin('u.tweets', 't')
-            ->where($queryBuilder->expr()->eq('u.id', ':userId'))
-            ->setParameter('userId', $userId);
-
-        return $queryBuilder->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
-    }
-
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function findUserWithTweetsWithDBALQueryBuilder(int $userId): array
-    {
-        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
-        $queryBuilder->select('u', 't')
-            ->from('"user"', 'u')
-            ->leftJoin('u', 'tweet', 't', 'u.id = t.author_id')
-            ->where($queryBuilder->expr()->eq('u.id', ':userId'))
-            ->setParameter('userId', $userId);
-
-        return $queryBuilder->execute()->fetchAllNumeric();
+        return $userRepository->getUsers($page, $perPage);
     }
 }

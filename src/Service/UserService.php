@@ -41,7 +41,7 @@ class UserService
         return true;
     }
 
-    public function deleteUser(int $userId): bool
+    public function deleteUserById(int $userId): bool
     {
         /** @var UserRepository $userRepository */
         $userRepository = $this->entityManager->getRepository(User::class);
@@ -50,6 +50,11 @@ class UserService
         if ($user === null) {
             return false;
         }
+        return $this->deleteUser($user);
+    }
+
+    public function deleteUser(User $user): bool
+    {
         $this->entityManager->remove($user);
         $this->entityManager->flush();
 

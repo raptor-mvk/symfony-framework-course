@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Controller\Api\v1;
+namespace App\Controller\Api\v2;
 
 use App\Entity\User;
 use App\Service\UserService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
-/** @Route("/api/v1/user") */
+/**
+ * @Route("/api/v2/user", service="App\Controller\Api\v2\UserController")
+ */
 class UserController
 {
     /** @var UserService */
@@ -21,7 +26,8 @@ class UserController
     }
 
     /**
-     * @Route("", methods={"POST"})
+     * @Route("")
+     * @Method("POST")
      */
     public function saveUserAction(Request $request): Response
     {
@@ -35,35 +41,49 @@ class UserController
     }
 
     /**
-     * @Route("", methods={"GET"})
+     * @Route("")
+     * @Method("GET")
      */
     public function getUsersAction(Request $request): Response
     {
-        $perPage = $request->query->get('perPage');
-        $page = $request->query->get('page');
+        $perPage = $request->request->get('perPage');
+        $page = $request->request->get('page');
         $users = $this->userService->getUsers($page ?? 0, $perPage ?? 20);
         $code = empty($users) ? 204 : 200;
 
-        return new JsonResponse(['users' => array_map(static fn(User $user) => $user->toArray(), $users)], $code);
+        return new JsonResponse(['users' => array_map(static fn(User $user) => $user->toArray(), $users], $code);
     }
 
     /**
-     * @Route("/{id}", methods={"DELETE"}, requirements={"id":"\d+"})
+     * @Route("/by-login/{user_login}", priority=2)
+     * @Method("GET")
+     * @ParamConverter("user", options={"mapping": {"user_login": "login"}})
      */
-    public function deleteUserAction(int $id): Response
+    public function getUserByLoginAction(User $user): Response
     {
-        $result = $this->userService->deleteUserById($id);
+        return new JsonResponse(['user' => $user->toArray()], 200);
+    }
+
+    /**
+     * @Route("/{user_id}")
+     * @Method("DELETE")
+     * @Entity("user", expr="repository.find(user_id)")
+     */
+    public function deleteUserAction(User $user): Response
+    {
+        $result = $this->userService->deleteUser($user);
 
         return new JsonResponse(['success' => $result], $result ? 200 : 404);
     }
 
     /**
-     * @Route("", methods={"PATCH"})
+     * @Route("")
+     * @Method("PATCH")
      */
     public function updateUserAction(Request $request): Response
     {
-        $userId = $request->query->get('userId');
-        $login = $request->query->get('login');
+        $userId = $request->request->get('userId');
+        $login = $request->request->get('login');
         $result = $this->userService->updateUser($userId, $login);
 
         return new JsonResponse(['success' => $result], $result ? 200 : 404);

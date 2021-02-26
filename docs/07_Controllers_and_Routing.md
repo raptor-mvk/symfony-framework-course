@@ -161,7 +161,7 @@
         public function deleteUserAction(Request $request): Response
         {
             $userId = $request->query->get('userId');
-            $result = $this->userService->deleteUserById($userId);
+            $result = $this->userService->deleteUser($userId);
     
             return new JsonResponse(['success' => $result], $result ? 200 : 404);
         }
@@ -240,6 +240,8 @@
     ```
 1. Ещё раз отправляем запрос Get user list из Postman-коллекции, видим список пользователей с данными
 1. Устанавливаем пакет `sensio/framework-extra-bundle` командой `composer require sensio/framework-extra-bundle`
+1. Устанавливаем пакет `symfony/expression-language` командой `composer require symfony/expression-language` (
+   понадобится для использования аннотации `@Entity`)
 1. Создаём класс `App\Controller\Api\v2\UserController`
     ```php
     <?php
@@ -295,7 +297,7 @@
             $users = $this->userService->getUsers($page ?? 0, $perPage ?? 20);
             $code = empty($users) ? 204 : 200;
     
-            return new JsonResponse(['users' => $users], $code);
+            return new JsonResponse(['users' => array_map(static fn(User $user) => $user->toArray(), $users)], $code);
         }
     
         /**
@@ -330,7 +332,7 @@
             $login = $request->request->get('login');
             $result = $this->userService->updateUser($userId, $login);
     
-            return new JsonResponse(['success' => $result], $result ? 200 : 404);
+            return new JsonResponse(['success' => $result->toArray()], $result ? 200 : 404);
         }
     }
     ```

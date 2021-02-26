@@ -47,12 +47,11 @@ class UserController
     }
 
     /**
-     * @Route("", methods={"DELETE"})
+     * @Route("/{id}", methods={"DELETE"}, requirements={"id":"\d+"})
      */
-    public function deleteUserAction(Request $request): Response
+    public function deleteUserAction(int $id): Response
     {
-        $userId = $request->query->get('userId');
-        $result = $this->userService->deleteUser($userId);
+        $result = $this->userService->deleteUser($id);
 
         return new JsonResponse(['success' => $result], $result ? 200 : 404);
     }

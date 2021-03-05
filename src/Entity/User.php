@@ -1,140 +1,190 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTime;
+use App\Entity\Traits\CreatedAtTrait;
+use App\Entity\Traits\UpdatedAtTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\ORM\Mapping;
 
 /**
- * @ORM\Table(name="`user`")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ *
+ * @Mapping\Table(name="`user`")
+ * @Mapping\Entity(repositoryClass="App\Repository\UserRepository")
+ * @Mapping\HasLifecycleCallbacks()
+ *
  */
-class User implements HasMetaTimestampsInterface
+class User
 {
+    use CreatedAtTrait, UpdatedAtTrait;
+
     /**
-     * @ORM\Column(name="id", type="bigint", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Mapping\Column(name="id", type="bigint", unique=true)
+     * @Mapping\Id
+     * @Mapping\GeneratedValue(strategy="IDENTITY")
      */
-    private ?int $id = null;
+    private $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=32, nullable=false)
+     * @Mapping\Column(type="string", length=32, nullable=false, unique=true)
      */
-    private string $login;
+    private $login;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="create")
+     * @var string
+     *
+     * @Mapping\Column(type="string", length=32, nullable=false)
      */
-    private DateTime $createdAt;
+    private $password;
 
     /**
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="update")
+     * @var int
+     *
+     * @Mapping\Column(type="integer", nullable=false)
      */
-    private DateTime $updatedAt;
+    private $age;
 
     /**
-     * @ORM\OneToMany(targetEntity="Tweet", mappedBy="author")
+     * @var bool
+     *
+     * @Mapping\Column(type="boolean", nullable=false)
      */
-    private Collection $tweets;
+    private $isActive;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="followers")
+     * @var Organization
+     *
+     * @Mapping\ManyToOne(targetEntity="Organization", inversedBy="groupTest", cascade={"persist"})
      */
-    private Collection $authors;
+    private $organization;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="authors")
-     * @ORM\JoinTable(
-     *     name="author_follower",
-     *     joinColumns={@ORM\JoinColumn(name="author_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="follower_id", referencedColumnName="id")}
-     * )
+     * @Mapping\ManyToMany(targetEntity="Organization")
+     * @Mapping\JoinTable(name="user_organization")
+     * @var ArrayCollection
      */
-    private Collection $followers;
+    private $linkedOrganizations;
 
-    public function __construct()
-    {
-        $this->tweets = new ArrayCollection();
-        $this->authors = new ArrayCollection();
-        $this->followers = new ArrayCollection();
-    }
-
-    public function getId(): int
+    /**
+     * @return mixed
+     */
+    public function getId()
     {
         return $this->id;
     }
 
-    public function setId(int $id): void
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
     {
         $this->id = $id;
     }
 
+    /**
+     * @return string
+     */
     public function getLogin(): string
     {
         return $this->login;
     }
 
+    /**
+     * @param string $login
+     */
     public function setLogin(string $login): void
     {
         $this->login = $login;
     }
 
-    public function getCreatedAt(): DateTime {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(): void {
-        $this->createdAt = new DateTime();
-    }
-
-    public function getUpdatedAt(): DateTime {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(): void {
-        $this->updatedAt = new DateTime();
-    }
-
-    public function addTweet(Tweet $tweet): void
+    /**
+     * @return string
+     */
+    public function getPassword()
     {
-        if (!$this->tweets->contains($tweet)) {
-            $this->tweets->add($tweet);
-        }
+        return $this->password;
     }
 
-    public function addFollower(User $follower): void
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
     {
-        if (!$this->followers->contains($follower)) {
-            $this->followers->add($follower);
-        }
+        $this->password = $password;
     }
 
-    public function addAuthor(User $author): void
+    /**
+     * @return int
+     */
+    public function getAge()
     {
-        if (!$this->authors->contains($author)) {
-            $this->authors->add($author);
-        }
+        return $this->age;
     }
 
-    public function toArray(): array
+    /**
+     * @param int $age
+     */
+    public function setAge($age)
     {
-        return [
-            'id' => $this->id,
-            'login' => $this->login,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
-            'tweets' => array_map(static fn(Tweet $tweet) => $tweet->toArray(), $this->tweets->toArray()),
-            'followers' => array_map(static fn(User $user) => $user->getLogin(), $this->followers->toArray()),
-            'authors' => array_map(static fn(User $user) => $user->getLogin(), $this->authors->toArray()),
-        ];
+        $this->age = $age;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    }
+
+    /**
+     * @return Organization
+     */
+    public function getOrganization(): Organization
+    {
+        return $this->organization;
+    }
+
+    /**
+     * @param Organization $organization
+     */
+    public function setOrganization(Organization $organization): void
+    {
+        $this->organization = $organization;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getLinkedOrganizations(): Collection
+    {
+        return $this->linkedOrganizations;
+    }
+
+    /**
+     * @param Collection $linkedOrganizations
+     */
+    public function setLinkedOrganizations(Collection $linkedOrganizations): void
+    {
+        $this->linkedOrganizations = $linkedOrganizations;
+    }
+
+    public function addLinkedOrganization(Organization $organization) {
+        $this->linkedOrganizations->add($organization);
+    }
+
+    public function removeLinkedOrganization(Organization $organization) {
+        $this->linkedOrganizations->removeElement($organization);
     }
 }

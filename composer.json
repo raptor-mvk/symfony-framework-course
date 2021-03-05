@@ -1,24 +1,23 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
-        "php": ">=7.2.5",
+        "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/doctrine-bundle": "^2.2",
-        "doctrine/doctrine-migrations-bundle": "^3.0",
-        "doctrine/orm": "^2.8",
-        "sensio/framework-extra-bundle": "^6.1",
-        "stof/doctrine-extensions-bundle": "^1.5",
-        "symfony/console": "5.2.*",
-        "symfony/dotenv": "5.2.*",
+        "doctrine/doctrine-bundle": "^2.1",
+        "doctrine/doctrine-migrations-bundle": "^2.1",
+        "doctrine/orm": "^2.7",
+        "jms/serializer-bundle": "^3.6",
+        "sensio/framework-extra-bundle": "^5.5",
+        "symfony/console": "5.1.*",
+        "symfony/dotenv": "5.1.*",
         "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "5.2.*",
-        "symfony/twig-bundle": "5.2.*",
-        "symfony/webpack-encore-bundle": "^1.9",
-        "symfony/yaml": "5.2.*"
+        "symfony/form": "5.1.*",
+        "symfony/framework-bundle": "5.1.*",
+        "symfony/twig-bundle": "5.1.*",
+        "symfony/validator": "5.1.*",
+        "symfony/yaml": "5.1.*"
     },
     "require-dev": {
     },
@@ -40,9 +39,13 @@
         }
     },
     "replace": {
+        "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",
-        "symfony/polyfill-php72": "*"
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php56": "*"
     },
     "scripts": {
         "auto-scripts": {
@@ -62,7 +65,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.2.*"
+            "require": "5.1.*"
         }
     }
 }

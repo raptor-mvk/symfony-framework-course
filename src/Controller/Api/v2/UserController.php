@@ -51,7 +51,7 @@ class UserController
         $users = $this->userService->getUsers($page ?? 0, $perPage ?? 20);
         $code = empty($users) ? 204 : 200;
 
-        return new JsonResponse(['users' => array_map(static fn(User $user) => $user->toArray(), $users], $code);
+        return new JsonResponse(['users' => array_map(static fn(User $user) => $user->toArray(), $users)], $code);
     }
 
     /**

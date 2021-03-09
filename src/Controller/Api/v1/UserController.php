@@ -2,8 +2,10 @@
 
 namespace App\Controller\Api\v1;
 
+use App\DTO\UserDTO;
 use App\Entity\User;
 use App\Service\UserService;
+use JsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +24,19 @@ class UserController
 
     /**
      * @Route("", methods={"POST"})
+     *
+     * @throws JsonException
      */
     public function saveUserAction(Request $request): Response
     {
-        $login = $request->request->get('login');
-        $userId = $this->userService->saveUser($login);
+        $userDTO = new UserDTO(
+            [
+                'login' => $request->request->get('login'),
+                'password' => $request->request->get('password'),
+                'roles' => $request->request->get('roles'),
+            ]
+        );
+        $userId = $this->userService->saveUser(new User(), $userDTO);
         [$data, $code] = $userId === null ?
             [['success' => false], 400] :
             [['success' => true, 'userId' => $userId], 200];
@@ -62,9 +72,15 @@ class UserController
      */
     public function updateUserAction(Request $request): Response
     {
-        $userId = $request->query->get('userId');
-        $login = $request->query->get('login');
-        $result = $this->userService->updateUser($userId, $login);
+        $userId = $request->request->get('userId');
+        $userDTO = new UserDTO(
+            [
+                'login' => $request->request->get('login'),
+                'password' => $request->request->get('password'),
+                'roles' => $request->request->get('roles'),
+            ]
+        );
+        $result = $this->userService->updateUser($userId, $userDTO);
 
         return new JsonResponse(['success' => $result], $result ? 200 : 404);
     }

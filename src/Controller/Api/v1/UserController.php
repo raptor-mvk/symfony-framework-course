@@ -4,22 +4,26 @@ namespace App\Controller\Api\v1;
 
 use App\DTO\UserDTO;
 use App\Entity\User;
+use App\Security\Voter\UserVoter;
 use App\Service\UserService;
 use JsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /** @Route("/api/v1/user") */
 class UserController
 {
-    /** @var UserService */
-    private $userService;
+    private UserService $userService;
 
-    public function __construct(UserService $userService)
+    private AuthorizationCheckerInterface $authorizationChecker;
+
+    public function __construct(UserService $userService, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->userService = $userService;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -62,6 +66,10 @@ class UserController
      */
     public function deleteUserAction(int $id): Response
     {
+        $user = $this->userService->findUserById($id);
+        if (!$this->authorizationChecker->isGranted(UserVoter::DELETE, $user)) {
+            return new JsonResponse('Access denied', 403);
+        }
         $result = $this->userService->deleteUserById($id);
 
         return new JsonResponse(['success' => $result], $result ? 200 : 404);

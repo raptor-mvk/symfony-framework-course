@@ -78,4 +78,13 @@ class UserService
 
         return $userRepository->getUsers($page, $perPage);
     }
+
+    public function findUserById(int $userId): ?User
+    {
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->entityManager->getRepository(User::class);
+        /** @var User|null $user */
+        $user = $userRepository->find($userId);
+        return $user;
+    }
 }

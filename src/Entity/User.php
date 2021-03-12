@@ -26,9 +26,8 @@ class User implements HasMetaTimestampsInterface, UserInterface
     private ?int $id = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=32, nullable=false, unique=true)
+     * @JMS\Groups({"user1"})
      */
     private string $login;
 
@@ -77,12 +76,14 @@ class User implements HasMetaTimestampsInterface, UserInterface
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @JMS\Type("string")
+     * @JMS\Groups({"user1"})
      */
     private int $age;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @JMS\Type("int")
+     * @JMS\Groups({"user1"})
      */
     private bool $isActive;
 

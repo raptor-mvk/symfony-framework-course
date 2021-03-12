@@ -3,6 +3,7 @@
 namespace App\Controller\Api\GetUsers\v3;
 
 use App\Service\UserService;
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\ViewHandlerInterface;
@@ -32,6 +33,9 @@ class Controller
         $users = $this->userService->getUsers($page ?? 0, $perPage ?? 20);
         $code = empty($users) ? 204 : 200;
 
-        return $this->handleView($this->view(['users' => $users], $code));
+        $context = (new Context())->setGroups(['user1']);
+        $view = $this->view(['users' => $users], $code)->setContext($context);
+
+        return $this->handleView($view);
     }
 }

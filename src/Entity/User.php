@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 use JsonException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -72,6 +73,18 @@ class User implements HasMetaTimestampsInterface, UserInterface
      * @ORM\Column(type="string", length=1024, nullable=false)
      */
     private string $roles;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @JMS\Type("string")
+     */
+    private int $age;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @JMS\Type("int")
+     */
+    private bool $isActive;
 
     public function __construct()
     {
@@ -169,6 +182,26 @@ class User implements HasMetaTimestampsInterface, UserInterface
     public function setRoles(array $roles): void
     {
         $this->roles = json_encode($roles, JSON_THROW_ON_ERROR);
+    }
+
+    public function getAge(): int
+    {
+        return $this->age;
+    }
+
+    public function setAge(int $age): void
+    {
+        $this->age = $age;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
     }
 
     /**

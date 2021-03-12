@@ -4,6 +4,7 @@ namespace App\Controller\Api\SaveUser\v3;
 
 use App\Entity\User;
 use App\Exception\DeprecatedApiException;
+use App\Exception\OtherDeprecatedApiException;
 use App\Service\UserService;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
@@ -35,7 +36,7 @@ class Controller
      */
     public function saveUserAction(string $login, string $password, $age, $isActive): Response
     {
-        throw new DeprecatedApiException("Use POST /api/v4/save-user instead");
+        throw new OtherDeprecatedApiException("Use POST /api/v4/save-user instead");
         $userDTO = new UserDTO([
                 'login' => $login,
                 'password' => $password,

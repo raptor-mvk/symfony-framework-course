@@ -1,0 +1,342 @@
+{
+	"info": {
+		"_postman_id": "99d93d41-3bdb-441d-abeb-9b3ac99d3093",
+		"name": "Symfony course",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "my_user",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "my_pass",
+							"type": "text"
+						},
+						{
+							"key": "roles",
+							"value": "[\"ROLE_USER\"]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user v3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "my_user4",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "my_pass",
+							"type": "text"
+						},
+						{
+							"key": "roles",
+							"value": "[\"ROLE_USER\"]",
+							"type": "text"
+						},
+						{
+							"key": "age",
+							"value": "234",
+							"type": "text"
+						},
+						{
+							"key": "isActive",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v3/save-user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"save-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user v4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"my_user9\",\r\n    \"password\": \"my_pass\",\r\n    \"roles\": [\"ROLE_USER\"],\r\n    \"age\": 234,\r\n    \"isActive\": true\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v4/save-user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v4",
+						"save-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user list",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/user?perPage=3&page=0",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user"
+					],
+					"query": [
+						{
+							"key": "perPage",
+							"value": "3"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user list v3",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v3/get-users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"get-users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by login v2",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v2/user/by-login/my_user_new_login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"user",
+						"by-login",
+						"my_user_new_login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch user",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "my_user_new_login",
+							"type": "text"
+						},
+						{
+							"key": "userId",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/user/40",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"40"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost:7777"
+		},
+		{
+			"key": "host1",
+			"value": "ec2-18-198-210-74.eu-central-1.compute.amazonaws.com"
+		},
+		{
+			"key": "host2",
+			"value": "ec2-18-192-106-43.eu-central-1.compute.amazonaws.com"
+		}
+	]
+}

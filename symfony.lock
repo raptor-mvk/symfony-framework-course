@@ -274,6 +274,9 @@
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
     },
+    "symfony/options-resolver": {
+        "version": "v5.2.4"
+    },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.22.0"
     },

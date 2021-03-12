@@ -76,15 +76,16 @@ class User implements HasMetaTimestampsInterface, UserInterface
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @JMS\Type("string")
+     * @JMS\Type("int")
      * @JMS\Groups({"user1"})
      */
     private int $age;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @JMS\Type("int")
+     * @JMS\Type("bool")
      * @JMS\Groups({"user1"})
+     * @JMS\SerializedName("isActive")
      */
     private bool $isActive;
 
@@ -164,6 +165,9 @@ class User implements HasMetaTimestampsInterface, UserInterface
 
     /**
      * @return string[]
+     *
+     * @JMS\Groups({"user1"})
+     * @JMS\Type("array")
      *
      * @throws JsonException
      */

@@ -86,3 +86,8 @@ services:
         calls:
             - [setTag, ['li']]
         tags: ['app.formatter_service']
+
+    deprecatedApiExceptionListener:
+        class: App\EventListener\DeprecatedApiExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }

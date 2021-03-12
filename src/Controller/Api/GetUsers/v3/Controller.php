@@ -33,7 +33,7 @@ class Controller
         $users = $this->userService->getUsers($page ?? 0, $perPage ?? 20);
         $code = empty($users) ? 204 : 200;
 
-        $context = (new Context())->setGroups(['user1']);
+        $context = (new Context())->setGroups(['user1', 'user2']);
         $view = $this->view(['users' => $users], $code)->setContext($context);
 
         return $this->handleView($view);

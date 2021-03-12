@@ -22,6 +22,7 @@ class User implements HasMetaTimestampsInterface, UserInterface
      * @ORM\Column(name="id", type="bigint", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @JMS\Groups({"user2"})
      */
     private ?int $id = null;
 

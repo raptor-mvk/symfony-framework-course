@@ -29,6 +29,8 @@ class UserService
         $user->setLogin($userDTO->login);
         $user->setPassword($this->userPasswordEncoder->encodePassword($user, $userDTO->password));
         $user->setRoles($userDTO->roles);
+        $user->setAge($userDTO->age);
+        $user->setIsActive($userDTO->isActive);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 

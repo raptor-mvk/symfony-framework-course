@@ -22,6 +22,10 @@ class UserDTO
 
     public array $roles;
 
+    public ?int $age;
+
+    public ?bool $isActive;
+
     /**
      * @throws JsonException
      */
@@ -29,7 +33,9 @@ class UserDTO
     {
         $this->login = $data['login'] ?? '';
         $this->password = $data['password'] ?? '';
-        $this->roles = json_decode($data['roles'], true, 512, JSON_THROW_ON_ERROR) ?? [];
+        $this->roles = json_decode($data['roles'] ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?? [];
+        $this->age = $data['age'] ?? null;
+        $this->isActive = $data['isActive'] ?? null;
     }
 
     /**
@@ -41,6 +47,8 @@ class UserDTO
             'login' => $user->getLogin(),
             'password' => $user->getPassword(),
             'roles' => $user->getRoles(),
+            'age' => $user->getAge(),
+            'isActive' => $user->isActive(),
         ]);
     }
 }

@@ -22,7 +22,7 @@ security:
             stateless: true
             guard:
                 authenticators:
-                    - App\Security\ApiTokenAuthenticator
+                    - App\Security\JwtTokenAuthenticator
 
             logout:
                 path: app_logout

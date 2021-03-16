@@ -19,10 +19,10 @@ security:
             pattern: ^/api/v1/token
             security: false
         main:
-            lazy: true
-            provider: app_user_provider
-            custom_authenticator:
-                - App\Security\LoginFormAuthenticator
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\ApiTokenAuthenticator
 
             logout:
                 path: app_logout

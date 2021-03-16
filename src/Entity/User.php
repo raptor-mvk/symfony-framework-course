@@ -89,6 +89,11 @@ class User implements HasMetaTimestampsInterface, UserInterface
      */
     private bool $isActive;
 
+    /**
+     * @ORM\Column(type="string", length=32, nullable=true, unique=true)
+     */
+    private string $token;
+
     public function __construct()
     {
         $this->tweets = new ArrayCollection();
@@ -161,6 +166,16 @@ class User implements HasMetaTimestampsInterface, UserInterface
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
     }
 
     /**

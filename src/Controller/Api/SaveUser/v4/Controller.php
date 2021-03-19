@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\SaveUser\v4;
 
+use App\Client\StatsdAPIClient;
 use App\Controller\Api\SaveUser\v4\Input\SaveUserDTO;
 use App\Controller\Common\ErrorResponseTrait;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -19,11 +20,14 @@ class Controller
 
     private LoggerInterface $logger;
 
-    public function __construct(SaveUserManager $saveUserManager, ViewHandlerInterface $viewHandler, LoggerInterface $logger)
+    private StatsdAPIClient $statsdAPIClient;
+
+    public function __construct(SaveUserManager $saveUserManager, ViewHandlerInterface $viewHandler, LoggerInterface $logger, StatsdAPIClient $statsdAPIClient)
     {
         $this->saveUserManager = $saveUserManager;
         $this->viewhandler = $viewHandler;
         $this->logger = $logger;
+        $this->statsdAPIClient = $statsdAPIClient;
     }
 
     /**
@@ -31,6 +35,7 @@ class Controller
      */
     public function saveUserAction(SaveUserDTO $request, ConstraintViolationListInterface $validationErrors): Response
     {
+        $this->statsdAPIClient->increment('save_user_v4_attempt');
         $this->logger->debug('This is debug message');
         $this->logger->info('This is info message');
         $this->logger->notice('This is notice message');

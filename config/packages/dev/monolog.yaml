@@ -5,6 +5,7 @@ monolog:
             action_level: error
             handler: nested
             buffer_size: 3
+            formatter: monolog.formatter.app_formatter
         nested:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"

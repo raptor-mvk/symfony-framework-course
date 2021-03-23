@@ -1,0 +1,27 @@
+monolog:
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: error
+            handler: nested
+            buffer_size: 3
+            formatter: monolog.formatter.app_formatter
+        nested:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+        # uncomment to get logging in your browser
+        # you may have to allow bigger header sizes in your Web server configuration
+        #firephp:
+        #    type: firephp
+        #    level: info
+        #chromephp:
+        #    type: chromephp
+        #    level: info
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ["!event", "!doctrine", "!console"]
+        sentry:
+            type: service
+            id: Sentry\Monolog\Handler

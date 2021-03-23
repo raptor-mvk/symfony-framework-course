@@ -19,6 +19,7 @@ security:
             pattern: ^/api/v1/token
             security: false
         main:
+            security: false
             stateless: true
             guard:
                 authenticators:

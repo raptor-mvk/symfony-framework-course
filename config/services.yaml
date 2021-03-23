@@ -109,16 +109,11 @@ services:
             - '%env(REDIS_DSN)%'
 
     redis_adapter:
-        class: Symfony\Component\Cache\Adapter\RedisAdapter
+        class: Symfony\Component\Cache\Adapter\RedisTagAwareAdapter
         arguments:
             - '@redis_client'
             - 'my_app'
 
-    redis_adapter_decorated:
-        class: App\Symfony\CountingAdapterDecorator
-        arguments:
-            - '@redis_adapter'
-
     App\Service\TweetService:
         arguments:
-            $cacheItemPool: '@redis_adapter_decorated'
+            $cache: '@redis_adapter'

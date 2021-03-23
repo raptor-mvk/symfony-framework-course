@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  *         @ORM\Index(name="tweet__author_id__ind", columns={"author_id"})
  *     }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\TweetRepository")
  */
 class Tweet
 {
@@ -99,6 +99,7 @@ class Tweet
         return [
             'id' => $this->id,
             'login' => $this->author->getLogin(),
+            'text' => $this->text,
             'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
             'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
         ];

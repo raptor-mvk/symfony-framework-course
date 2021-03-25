@@ -15,6 +15,7 @@
         "jms/serializer-bundle": "^3.8",
         "lexik/jwt-authentication-bundle": "^2.11",
         "nyholm/psr7": "^1.4",
+        "php-amqplib/rabbitmq-bundle": "^2.6",
         "sensio/framework-extra-bundle": "^6.1",
         "sentry/sentry-symfony": "^4.0",
         "stof/doctrine-extensions-bundle": "^1.5",
@@ -31,8 +32,6 @@
         "symfony/validator": "5.2.*",
         "symfony/webpack-encore-bundle": "^1.9",
         "symfony/yaml": "5.2.*"
-    },
-    "require-dev": {
     },
     "config": {
         "optimize-autoloader": true,

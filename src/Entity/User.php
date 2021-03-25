@@ -92,7 +92,7 @@ class User implements HasMetaTimestampsInterface, UserInterface
     /**
      * @ORM\Column(type="string", length=32, nullable=true, unique=true)
      */
-    private string $token;
+    private ?string $token = null;
 
     public function __construct()
     {

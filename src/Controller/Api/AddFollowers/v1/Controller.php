@@ -2,6 +2,8 @@
 
 namespace App\Controller\Api\AddFollowers\v1;
 
+use App\DTO\AddFollowersDTO;
+use App\Service\AsyncService;
 use App\Service\SubscriptionService;
 use App\Service\UserService;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -18,10 +20,13 @@ class Controller
 
     private UserService $userService;
 
-    public function __construct(SubscriptionService $subscriptionService, UserService $userService, ViewHandlerInterface $viewHandler)
+    private AsyncService $asyncService;
+
+    public function __construct(SubscriptionService $subscriptionService, UserService $userService, AsyncService $asyncService, ViewHandlerInterface $viewHandler)
     {
         $this->subscriptionService = $subscriptionService;
         $this->userService = $userService;
+        $this->asyncService = $asyncService;
         $this->viewhandler = $viewHandler;
     }
 
@@ -31,13 +36,20 @@ class Controller
      * @RequestParam(name="userId", requirements="\d+")
      * @RequestParam(name="followersLogin")
      * @RequestParam(name="count", requirements="\d+")
+     * @RequestParam(name="async", requirements="0|1")
      */
-    public function addFollowersAction(int $userId, string $followersLogin, int $count): Response
+    public function addFollowersAction(int $userId, string $followersLogin, int $count, int $async): Response
     {
         $user = $this->userService->findUserById($userId);
         if ($user !== null) {
-            $createdFollowers = $this->subscriptionService->addFollowers($user, $followersLogin, $count);
-            $view = $this->view(['created' => $createdFollowers], 200);
+            if ($async === 0) {
+                $createdFollowers = $this->subscriptionService->addFollowers($user, $followersLogin, $count);
+                $view = $this->view(['created' => $createdFollowers], 200);
+            } else {
+                $message = (new AddFollowersDTO($userId, $followersLogin, $count))->toAMQPMessage();
+                $result = $this->asyncService->publishToExchange(AsyncService::ADD_FOLLOWER, $message);
+                $view = $this->view(['success' => $result], $result ? 200 : 500);
+            }
         } else {
             $view = $this->view(['success' => false], 404);
         }

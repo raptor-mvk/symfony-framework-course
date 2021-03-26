@@ -46,6 +46,7 @@ class Consumer implements ConsumerInterface
         }
 
         $this->subscriptionService->addFollowers($user, $message->getFollowerLogin(), $message->getCount());
+        throw new Exception('Something happens');
 
         $this->entityManager->clear();
         $this->entityManager->getConnection()->close();

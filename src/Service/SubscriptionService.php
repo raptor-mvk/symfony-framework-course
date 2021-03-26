@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTO\AddFollowersDTO;
 use App\DTO\UserDTO;
 use App\Entity\Subscription;
 use App\Entity\User;
@@ -58,5 +59,18 @@ class SubscriptionService
         }
 
         return $createdFollowers;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getFollowersMessages(User $user, string $followerLogin, int $count): array
+    {
+        $result = [];
+        for ($i = 0; $i < $count; $i++) {
+            $result[] = (new AddFollowersDTO($user->getId(), "$followerLogin #$i", 1))->toAMQPMessage();
+        }
+
+        return $result;
     }
 }

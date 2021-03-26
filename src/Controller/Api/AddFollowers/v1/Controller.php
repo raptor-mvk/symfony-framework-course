@@ -46,8 +46,8 @@ class Controller
                 $createdFollowers = $this->subscriptionService->addFollowers($user, $followersLogin, $count);
                 $view = $this->view(['created' => $createdFollowers], 200);
             } else {
-                $message = (new AddFollowersDTO($userId, $followersLogin, $count))->toAMQPMessage();
-                $result = $this->asyncService->publishToExchange(AsyncService::ADD_FOLLOWER, $message);
+                $message = $this->subscriptionService->getFollowersMessages($user, $followersLogin, $count);
+                $result = $this->asyncService->publishMultipleToExchange(AsyncService::ADD_FOLLOWER, $message);
                 $view = $this->view(['success' => $result], $result ? 200 : 500);
             }
         } else {

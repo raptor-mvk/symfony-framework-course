@@ -1,0 +1,35 @@
+old_sound_rabbit_mq:
+    connections:
+        default:
+            url: '%env(RABBITMQ_URL)%'
+            vhost: '%env(RABBITMQ_VHOST)%'
+            lazy:     true
+            connection_timeout: 3
+            read_write_timeout: 3
+
+            # requires php-amqplib v2.4.1+ and PHP5.4+
+            keepalive: false
+
+            # requires php-amqplib v2.4.1+
+            heartbeat: 0
+
+            #requires php_sockets.dll
+            use_socket: false # default false
+
+    producers:
+        add_followers:
+            connection: default
+            exchange_options: {name: 'old_sound_rabbit_mq.add_followers', type: direct}
+
+    consumers:
+        add_followers:
+            connection: default
+            exchange_options: {name: 'old_sound_rabbit_mq.add_followers', type: direct}
+            queue_options: {name: 'old_sound_rabbit_mq.consumer.add_followers'}
+            callback: App\Consumer\AddFollowers\Consumer
+            idle_timeout: 300
+            idle_timeout_exit_code: 0
+            graceful_max_execution:
+                timeout: 1800
+                exit_code: 0
+            qos_options: {prefetch_size: 0, prefetch_count: 30, global: false}

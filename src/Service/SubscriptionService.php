@@ -76,4 +76,31 @@ class SubscriptionService
 
         return $result;
     }
+
+    /**
+     * @return int[]
+     */
+    public function getFollowerIds(int $authorId): array
+    {
+        $subscriptions = $this->getSubscriptionsByAuthorId($authorId);
+        $mapper = static function(Subscription $subscription) {
+            return $subscription->getFollower()->getId();
+        };
+
+        return array_map($mapper, $subscriptions);
+    }
+
+    /**
+     * @return Subscription[]
+     */
+    private function getSubscriptionsByAuthorId(int $authorId): array
+    {
+        $userRepository = $this->entityManager->getRepository(User::class);
+        $author = $userRepository->find($authorId);
+        if (!($author instanceof User)) {
+            return [];
+        }
+        $subscriptionRepository = $this->entityManager->getRepository(Subscription::class);
+        return $subscriptionRepository->findBy(['author' => $author]) ?? [];
+    }
 }

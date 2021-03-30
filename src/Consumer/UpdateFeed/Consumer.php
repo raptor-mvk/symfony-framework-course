@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Consumer\PublishTweet;
+namespace App\Consumer\UpdateFeed;
 
-use App\Consumer\PublishTweet\Input\Message;
-use App\Consumer\PublishTweet\Output\UpdateFeedMessage;
+use App\Consumer\UpdateFeed\Input\Message;
+use App\DTO\SendNotificationDTO;
 use App\Entity\Tweet;
+use App\Entity\User;
 use App\Service\AsyncService;
-use App\Service\SubscriptionService;
+use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
@@ -19,15 +20,15 @@ class Consumer implements ConsumerInterface
 
     private ValidatorInterface $validator;
 
-    private SubscriptionService $subscriptionService;
+    private FeedService $feedService;
 
     private AsyncService $asyncService;
 
-    public function __construct(EntityManagerInterface $entityManager, ValidatorInterface $validator, SubscriptionService $subscriptionService, AsyncService $asyncService)
+    public function __construct(EntityManagerInterface $entityManager, ValidatorInterface $validator, FeedService $feedService, AsyncService $asyncService)
     {
         $this->entityManager = $entityManager;
         $this->validator = $validator;
-        $this->subscriptionService = $subscriptionService;
+        $this->feedService = $feedService;
         $this->asyncService = $asyncService;
     }
 
@@ -44,16 +45,22 @@ class Consumer implements ConsumerInterface
         }
 
         $tweetRepository = $this->entityManager->getRepository(Tweet::class);
+        $userRepository = $this->entityManager->getRepository(User::class);
         $tweet = $tweetRepository->find($message->getTweetId());
         if (!($tweet instanceof Tweet)) {
             return $this->reject(sprintf('Tweet ID %s was not found', $message->getTweetId()));
         }
 
-        $followerIds = $this->subscriptionService->getFollowerIds($tweet->getAuthor()->getId());
-
-        foreach ($followerIds as $followerId) {
-            $message = (new UpdateFeedMessage($tweet->getId(), $followerId))->toAMQPMessage();
-            $this->asyncService->publishToExchange(AsyncService::UPDATE_FEED, $message, (string)$followerId);
+        $this->feedService->putTweet($tweet, $message->getFollowerId());
+        /** @var User $user */
+        $user = $userRepository->find($message->getFollowerId());
+        if ($user !== null) {
+            $message = (new SendNotificationDTO($message->getFollowerId(), $tweet->getText()))->toAMQPMessage();
+            $this->asyncService->publishToExchange(
+                AsyncService::SEND_NOTIFICATION,
+                $message,
+                $user->getPreferred()
+            );
         }
 
         $this->entityManager->clear();

@@ -3,6 +3,7 @@
 namespace App\Controller\Api\SaveTweet\v1;
 
 use App\Controller\Common\ErrorResponseTrait;
+use App\Service\FeedService;
 use App\Service\TweetService;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
@@ -16,9 +17,12 @@ class Controller
 
     private TweetService $tweetService;
 
-    public function __construct(TweetService $tweetService, ViewHandlerInterface $viewHandler)
+    private FeedService $feedService;
+
+    public function __construct(TweetService $tweetService, FeedService $feedService, ViewHandlerInterface $viewHandler)
     {
         $this->tweetService = $tweetService;
+        $this->feedService = $feedService;
         $this->viewhandler = $viewHandler;
     }
 
@@ -27,11 +31,21 @@ class Controller
      *
      * @RequestParam(name="authorId", requirements="\d+")
      * @RequestParam(name="text")
+     * @RequestParam(name="async", requirements="0|1", nullable=true)
      */
-    public function saveUserAction(int $authorId, string $text): Response
+    public function saveTweetAction(int $authorId, string $text, ?int $async): Response
     {
-        $tweetId = $this->tweetService->saveTweet($authorId, $text);
-        [$data, $code] = ($tweetId === null) ? [['success' => false], 400] : [['tweet' => $tweetId], 200];
-        return $this->handleView($this->view($data, $code));
+        $tweet = $this->tweetService->saveTweet($authorId, $text);
+        $success = $tweet !== null;
+        if ($success) {
+            if ($async === 1) {
+                $this->feedService->spreadTweetAsync($tweet);
+            } else {
+                $this->feedService->spreadTweetSync($tweet);
+            }
+        }
+        $code = $success ? 200 : 400;
+
+        return $this->handleView($this->view(['success' => $success], $code));
     }
 }

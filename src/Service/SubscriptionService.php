@@ -50,7 +50,10 @@ class SubscriptionService
             $password = $followerLogin;
             $age = $i;
             $isActive = true;
-            $data = compact('login', 'password', 'age', 'isActive');
+            $phone = '+'.str_pad((string)abs(crc32($login)), 10, '0');
+            $email = "$login@gmail.com";
+            $preferred = random_int(0, 1) === 1 ? User::EMAIL_NOTIFICATION : User::SMS_NOTIFICATION;
+            $data = compact('login', 'password', 'age', 'isActive', 'phone', 'email', 'preferred');
             $followerId = $this->userService->saveUser(new User(), new UserDTO($data));
             if ($followerId !== null) {
                 $this->subscribe($user->getId(), $followerId);

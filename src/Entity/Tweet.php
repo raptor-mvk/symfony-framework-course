@@ -107,4 +107,19 @@ class Tweet
             'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
         ];
     }
+
+    public function toFeed(): array
+    {
+        return [
+            'id' => $this->id,
+            'author' => $this->getAuthor()->getLogin(),
+            'text' => $this->text,
+            'createdAt' => $this->createdAt->format('Y-m-d h:i:s'),
+        ];
+    }
+
+    public function toAMPQMessage(): string
+    {
+        return json_encode(['tweetId' => (int)$this->id], JSON_THROW_ON_ERROR, 512);
+    }
 }

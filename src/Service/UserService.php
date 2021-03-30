@@ -31,6 +31,9 @@ class UserService
         $user->setRoles($userDTO->roles);
         $user->setAge($userDTO->age);
         $user->setIsActive($userDTO->isActive);
+        $user->setPhone($userDTO->phone);
+        $user->setEmail($userDTO->email);
+        $user->setPreferred($userDTO->preferred);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 

@@ -18,6 +18,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements HasMetaTimestampsInterface, UserInterface
 {
+    public const EMAIL_NOTIFICATION = 'email';
+    public const SMS_NOTIFICATION = 'sms';
+
     /**
      * @ORM\Column(name="id", type="bigint", unique=true)
      * @ORM\Id
@@ -93,6 +96,21 @@ class User implements HasMetaTimestampsInterface, UserInterface
      * @ORM\Column(type="string", length=32, nullable=true, unique=true)
      */
     private ?string $token = null;
+
+    /**
+     * @ORM\Column(type="string", length=11, nullable=true)
+     */
+    private string $phone;
+
+    /**
+     * @ORM\Column(type="string", length=128, nullable=true)
+     */
+    private string $email;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private string $preferred;
 
     public function __construct()
     {
@@ -223,6 +241,36 @@ class User implements HasMetaTimestampsInterface, UserInterface
     public function setIsActive(bool $isActive): void
     {
         $this->isActive = $isActive;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): void
+    {
+        $this->phone = $phone;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getPreferred(): ?string
+    {
+        return $this->preferred;
+    }
+
+    public function setPreferred(string $preferred): void
+    {
+        $this->preferred = $preferred;
     }
 
     /**

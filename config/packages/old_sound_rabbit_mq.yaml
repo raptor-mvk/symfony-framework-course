@@ -89,7 +89,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_1:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -100,7 +100,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_2:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -111,7 +111,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_3:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -122,7 +122,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_4:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -133,7 +133,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_5:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -144,7 +144,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_6:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -155,7 +155,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_7:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -166,7 +166,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_8:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -177,7 +177,7 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}
         update_feed_9:
             connection: default
             exchange_options: {name: 'old_sound_rabbit_mq.update_feed', type: x-consistent-hash}
@@ -188,4 +188,4 @@ old_sound_rabbit_mq:
             graceful_max_execution:
                 timeout: 1800
                 exit_code: 0
-            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}
+            qos_options: {prefetch_size: 0, prefetch_count: 20, global: false}

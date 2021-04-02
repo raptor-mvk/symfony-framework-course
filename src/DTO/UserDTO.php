@@ -26,6 +26,12 @@ class UserDTO
 
     public ?bool $isActive;
 
+    public ?string $phone;
+
+    public ?string $email;
+
+    public ?string $preferred;
+
     /**
      * @throws JsonException
      */
@@ -36,6 +42,9 @@ class UserDTO
         $this->roles = json_decode($data['roles'] ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?? [];
         $this->age = $data['age'] ?? null;
         $this->isActive = $data['isActive'] ?? null;
+        $this->phone = $data['phone'] ?? null;
+        $this->email = $data['email'] ?? null;
+        $this->preferred = $data['preferred'] ?? null;
     }
 
     /**
@@ -49,6 +58,9 @@ class UserDTO
             'roles' => $user->getRoles(),
             'age' => $user->getAge(),
             'isActive' => $user->isActive(),
+            'phone' => $user->getPhone(),
+            'email' => $user->getEmail(),
+            'preferred' => $user->getPreferred(),
         ]);
     }
 }

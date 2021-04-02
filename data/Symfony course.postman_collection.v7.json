@@ -1,0 +1,526 @@
+{
+	"info": {
+		"_postman_id": "99d93d41-3bdb-441d-abeb-9b3ac99d3093",
+		"name": "Symfony course",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "my_user",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "my_pass",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/token",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "my_user",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "my_pass",
+							"type": "text"
+						},
+						{
+							"key": "roles",
+							"value": "[\"ROLE_USER\"]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add followers",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userId",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "followersLogin",
+							"value": "follower",
+							"type": "text"
+						},
+						{
+							"key": "count",
+							"value": "1000",
+							"type": "text"
+						},
+						{
+							"key": "async",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/add-followers",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"add-followers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post tweet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "authorId",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "text",
+							"value": "some tweet",
+							"type": "text"
+						},
+						{
+							"key": "async",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/tweet",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"tweet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user v3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "my_user4",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "my_pass",
+							"type": "text"
+						},
+						{
+							"key": "roles",
+							"value": "[\"ROLE_USER\"]",
+							"type": "text"
+						},
+						{
+							"key": "age",
+							"value": "234",
+							"type": "text"
+						},
+						{
+							"key": "isActive",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v3/save-user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"save-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user v4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"my_user9\",\r\n    \"password\": \"my_pass\",\r\n    \"roles\": [\"ROLE_USER\"],\r\n    \"age\": 234,\r\n    \"isActive\": true\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v4/save-user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v4",
+						"save-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user list",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MTU5MDM2ODIsImV4cCI6MTYxNTkwNzI4MiwidXNlcm5hbWUiOiJteV91c2VyIiwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdfQ.WjM_A1qjQFo13rtK6UZbdB-IIkB3N_YxFkB9oQU0maLcYPKMMDdOvhclTrBKnzMlkjsOcc6TCOKFTgwt4KyrFtMSX3qZKTE5D3czD853gOptv9dhne6gt62FDZLsgNI3Tayazl5OFR75hyey5j6Zde-gFsDMA7ki3Nc2edF0yTf8i3voXNI2W14i-bL4_iq7pTZKDipXWG8OGJoreJiYok_H3t0sI7GOh-Q2EpsJucZAzjurod7c6uNjq6K3B7KkDq2V2reFcknIo-YmfdSVxXGzQUy1rZDV81XE8d6j6gVmrdgRZnVfoomiBdDpzJkDS5rivnTZgemPBeyCvd1ANkrm5BFPw6JPo7mQ00xGVZy456EY_2j76FLYARRcnw5QyZYoKSXMFt5Z3PLG7ymbbc4Tw2qrn1fj8V2eneMfnNVFDIesUGx_fiswXg73321WT4b5VI4WnXGssJs2RrzUC3jHzuddCCqfTnToJl3HEqeK1N6isngsE_kV9GqKfM7XRJAWfwfCEWkfiMtNHdIanNvWDeN-tcviJ00xnkY-G4o_HNfyEsdHjFRu6RkVQd5sDMuWEWn6Nh3WVHCADXJOJ9t5gZ0Y_MONfYWVyRw4mXBcjKWGvpUA4Ekl4S3AOJT3h7vUyvt-_0zg5OAbUkZfSOUytPLqmZDn5x7fusue2tk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/user?perPage=3&page=0",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user"
+					],
+					"query": [
+						{
+							"key": "perPage",
+							"value": "3"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get tweet list",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/tweet?perPage=12&page=5",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"tweet"
+					],
+					"query": [
+						{
+							"key": "perPage",
+							"value": "12"
+						},
+						{
+							"key": "page",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user list v3",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v3/get-users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"get-users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by login v2",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v2/user/by-login/my_user_new_login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"user",
+						"by-login",
+						"my_user_new_login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch user",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "my_user_new_login",
+							"type": "text"
+						},
+						{
+							"key": "userId",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/user/40",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"40"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost:7777"
+		},
+		{
+			"key": "host1",
+			"value": "ec2-18-198-210-74.eu-central-1.compute.amazonaws.com"
+		},
+		{
+			"key": "host2",
+			"value": "ec2-18-192-106-43.eu-central-1.compute.amazonaws.com"
+		}
+	]
+}

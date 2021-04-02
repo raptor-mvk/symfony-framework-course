@@ -560,7 +560,7 @@
          * @RequestParam(name="authorId", requirements="\d+")
          * @RequestParam(name="text")
          */
-        public function saveUserAction(int $authorId, string $text): Response
+        public function saveTweetAction(int $authorId, string $text): Response
         {
             $tweetId = $this->tweetService->saveTweet($authorId, $text);
             [$data, $code] = ($tweetId === null) ? [['success' => false], 400] : [['tweet' => $tweetId], 200];

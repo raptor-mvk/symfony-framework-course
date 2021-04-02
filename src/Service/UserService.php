@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
+use Elastica\Query\QueryString;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use FOS\ElasticaBundle\Paginator\FantaPaginatorAdapter;
 use JsonException;
@@ -155,6 +156,22 @@ class UserService
         $aggregation = new Terms('notifications');
         $aggregation->setField($field);
         $query = new Query();
+        $query->addAggregation($aggregation);
+        $paginatedResult = $this->finder->findPaginated($query);
+        /** @var FantaPaginatorAdapter $adapter */
+        $adapter = $paginatedResult->getAdapter();
+
+        return $adapter->getAggregations();
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findUserByQueryWithAggregation(string $queryString, string $field): array
+    {
+        $aggregation = new Terms('notifications');
+        $aggregation->setField($field);
+        $query = new Query(new QueryString($queryString));
         $query->addAggregation($aggregation);
         $paginatedResult = $this->finder->findPaginated($query);
         /** @var FantaPaginatorAdapter $adapter */

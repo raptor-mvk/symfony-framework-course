@@ -6,6 +6,7 @@ use App\DTO\UserDTO;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use JsonException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -15,10 +16,13 @@ class UserService
 
     private UserPasswordEncoderInterface $userPasswordEncoder;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder)
+    private PaginatedFinderInterface $finder;
+
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder, PaginatedFinderInterface $finder)
     {
         $this->entityManager = $entityManager;
         $this->userPasswordEncoder = $userPasswordEncoder;
+        $this->finder = $finder;
     }
 
     /**
@@ -124,5 +128,19 @@ class UserService
         $user = $userRepository->findOneBy(['token' => $token]);
 
         return $user;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findUserByQuery(string $query, int $perPage, int $page): array
+    {
+        $paginatedResult = $this->finder->findPaginated($query);
+        $paginatedResult->setMaxPerPage($perPage);
+        $paginatedResult->setCurrentPage($page);
+        $result = [];
+        array_push($result, ...$paginatedResult->getCurrentPageResults());
+
+        return $result;
     }
 }

@@ -100,17 +100,17 @@ class User implements HasMetaTimestampsInterface, UserInterface
     /**
      * @ORM\Column(type="string", length=11, nullable=true)
      */
-    private string $phone;
+    private ?string $phone;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      */
-    private string $email;
+    private ?string $email;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
      */
-    private string $preferred;
+    private ?string $preferred;
 
     public function __construct()
     {

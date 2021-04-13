@@ -326,7 +326,7 @@
         return $adapter->getAggregations();
     }
     ```
-1. Добавляем класс `App\Controller\Api\GetUsersWithAggregation\v1\UserController`
+1. Добавляем класс `App\Controller\Api\GetUsersWithAggregation\v1\Controller`
     ```php
     <?php
     

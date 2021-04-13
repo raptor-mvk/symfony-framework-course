@@ -64,4 +64,25 @@ class SubscriptionServiceTest extends TestCase
 
         static::assertSame($expected, $actual, 'Subscribe should return correct result');
     }
+
+    public function testSubscribeReturnsAfterFirstError(): void
+    {
+        /** @var MockInterface|EntityRepository $repository */
+        $repository = Mockery::mock(EntityRepository::class);
+        $repository->shouldReceive('find')->with(self::INCORRECT_AUTHOR)->andReturn(null)->never();
+        $repository->shouldReceive('find')->with(self::INCORRECT_FOLLOWER)->never();
+        /** @var MockInterface|EntityManagerInterface $repository */
+        self::$entityManager = Mockery::mock(EntityManagerInterface::class);
+        self::$entityManager->shouldReceive('getRepository')->with(User::class)->andReturn($repository);
+        self::$entityManager->shouldReceive('persist');
+        self::$entityManager->shouldReceive('flush');
+        $userService = new UserService(
+            self::$entityManager,
+            Mockery::mock(UserPasswordEncoderInterface::class),
+            Mockery::mock(PaginatedFinderInterface::class)
+        );
+        $subscriptionService = new SubscriptionService(self::$entityManager, $userService);
+
+        $subscriptionService->subscribe(self::INCORRECT_AUTHOR, self::INCORRECT_FOLLOWER);
+    }
 }

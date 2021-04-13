@@ -52,6 +52,7 @@ class SubscriptionServiceTest extends TestCase
      */
     public function testSubscribeReturnsCorrectResult(int $authorId, int $followerId, bool $expected): void
     {
+        usleep(400000);
         $userService = new UserService(
             self::$entityManager,
             Mockery::mock(UserPasswordEncoderInterface::class),

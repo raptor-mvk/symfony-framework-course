@@ -103,4 +103,31 @@ class SubscriptionService
         $subscriptionRepository = $this->entityManager->getRepository(Subscription::class);
         return $subscriptionRepository->findBy(['author' => $author]) ?? [];
     }
+
+    /**
+     * @return int[]
+     */
+    public function getAuthorIds(int $followerId): array
+    {
+        $subscriptions = $this->getSubscriptionsByFollowerId($followerId);
+        $mapper = static function(Subscription $subscription) {
+            return $subscription->getAuthor()->getId();
+        };
+
+        return array_map($mapper, $subscriptions);
+    }
+
+    /**
+     * @return Subscription[]
+     */
+    private function getSubscriptionsByFollowerId(int $followerId): array
+    {
+        $userRepository = $this->entityManager->getRepository(User::class);
+        $follower = $userRepository->find($followerId);
+        if (!($follower instanceof User)) {
+            return [];
+        }
+        $subscriptionRepository = $this->entityManager->getRepository(Subscription::class);
+        return $subscriptionRepository->findBy(['follower' => $follower]) ?? [];
+    }
 }

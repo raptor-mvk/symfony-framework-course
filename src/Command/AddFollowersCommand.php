@@ -16,6 +16,9 @@ final class AddFollowersCommand extends Command
     /** @var int */
     public const GENERAL_ERROR = 1;
 
+    /** @var int */
+    private const DEFAULT_FOLLOWERS = 100;
+
     private UserService $userService;
 
     private SubscriptionService $subscriptionService;
@@ -32,7 +35,7 @@ final class AddFollowersCommand extends Command
         $this->setName('followers:add')
             ->setDescription('Adds followers to author')
             ->addArgument('authorId', InputArgument::REQUIRED, 'ID of author')
-            ->addArgument('count', InputArgument::REQUIRED, 'How many followers should be added');
+            ->addArgument('count', InputArgument::OPTIONAL, 'How many followers should be added');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -43,7 +46,7 @@ final class AddFollowersCommand extends Command
             $output->write("<error>User with ID $authorId doesn't exist</error>\n");
             return self::GENERAL_ERROR;
         }
-        $count = (int)$input->getArgument('count');
+        $count = (int)($input->getArgument('count') ?? self::DEFAULT_FOLLOWERS);
         if ($count < 0) {
             $output->write("<error>Count should be positive integer</error>\n");
             return self::GENERAL_ERROR;

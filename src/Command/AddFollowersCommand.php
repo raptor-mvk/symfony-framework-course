@@ -51,10 +51,6 @@ final class AddFollowersCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$this->lock()) {
-            $output->writeln('<info>Command is already running.</info>');
-            return self::OK;
-        }
         $authorId = (int)$input->getArgument('authorId');
         $user = $this->userService->findUserById($authorId);
         if ($user === null) {
@@ -66,29 +62,9 @@ final class AddFollowersCommand extends Command
             $output->write("<error>Count should be positive integer</error>\n");
             return self::GENERAL_ERROR;
         }
-        $loginPrefix = $input->getOption('login') ?? self::DEFAULT_LOGIN_PREFIX;
-        $progressBar = new ProgressBar($output, $count);
-        $progressBar->start();
-        $createdFollowers = 0;
-        for ($i = 0; $i < $count; $i++) {
-            $login = $loginPrefix.$authorId."_#$i";
-            $password = $login;
-            $age = $i;
-            $isActive = true;
-            $phone = '+'.str_pad((string)abs(crc32($login)), 10, '0');
-            $email = "$login@gmail.com";
-            $preferred = random_int(0, 1) === 1 ? User::EMAIL_NOTIFICATION : User::SMS_NOTIFICATION;
-            $data = compact('login', 'password', 'age', 'isActive', 'phone', 'email', 'preferred');
-            $followerId = $this->userService->saveUser(new User(), new UserDTO($data));
-            if ($followerId !== null) {
-                $this->subscriptionService->subscribe($user->getId(), $followerId);
-                $createdFollowers++;
-                usleep(100000);
-                $progressBar->advance();
-            }
-        }
-        $output->write("<info>$createdFollowers followers were created</info>\n");
-        $progressBar->finish();
+        $login = $input->getOption('login') ?? self::DEFAULT_LOGIN_PREFIX;
+        $result = $this->subscriptionService->addFollowers($user, $login.$authorId, $count);
+        $output->write("<info>$result followers were created</info>\n");
 
         return self::OK;
     }

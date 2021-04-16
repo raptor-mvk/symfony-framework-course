@@ -273,11 +273,11 @@
          */
         public function testSubscribeReturnsCorrectResult(int $authorId, int $followerId, bool $expected): void
         {
-            $userService = new UserService(
-                self::$entityManager,
-                Mockery::mock(UserPasswordEncoderInterface::class),
-                Mockery::mock(PaginatedFinderInterface::class)
-            );
+           /** @var UserPasswordEncoderInterface $encoder */
+           $encoder = Mockery::mock(UserPasswordEncoderInterface::class);
+           /** @var PaginatedFinderInterface $finder */
+           $finder = Mockery::mock(PaginatedFinderInterface::class); 
+           $userService = new UserService(self::$entityManager, $encoder, $finder);
             $subscriptionService = new SubscriptionService(self::$entityManager, $userService);
     
             $actual = $subscriptionService->subscribe($authorId, $followerId);
@@ -313,11 +313,11 @@
     public function testSubscribeReturnsCorrectResult(int $authorId, int $followerId, bool $expected): void
     {
         usleep(400000);
-        $userService = new UserService(
-            self::$entityManager,
-            Mockery::mock(UserPasswordEncoderInterface::class),
-            Mockery::mock(PaginatedFinderInterface::class)
-        );
+        /** @var UserPasswordEncoderInterface $encoder */
+        $encoder = Mockery::mock(UserPasswordEncoderInterface::class);
+        /** @var PaginatedFinderInterface $finder */
+        $finder = Mockery::mock(PaginatedFinderInterface::class);
+        $userService = new UserService(self::$entityManager, $encoder, $finder);
        $subscriptionService = new SubscriptionService(self::$entityManager, $userService);
     
        $actual = $subscriptionService->subscribe($authorId, $followerId);
@@ -343,11 +343,11 @@
         self::$entityManager->shouldReceive('getRepository')->with(User::class)->andReturn($repository);
         self::$entityManager->shouldReceive('persist');
         self::$entityManager->shouldReceive('flush');
-        $userService = new UserService(
-            self::$entityManager,
-            Mockery::mock(UserPasswordEncoderInterface::class),
-            Mockery::mock(PaginatedFinderInterface::class)
-        );
+        /** @var UserPasswordEncoderInterface $encoder */
+        $encoder = Mockery::mock(UserPasswordEncoderInterface::class);
+        /** @var PaginatedFinderInterface $finder */
+        $finder = Mockery::mock(PaginatedFinderInterface::class);
+        $userService = new UserService(self::$entityManager, $encoder, $finder);
         $subscriptionService = new SubscriptionService(self::$entityManager, $userService);
     
         $subscriptionService->subscribe(self::INCORRECT_AUTHOR, self::INCORRECT_FOLLOWER);
@@ -686,6 +686,8 @@
     use App\Service\TweetService;
     use App\Service\UserService;
     use Mockery;
+    use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+    use Symfony\Contracts\Cache\TagAwareCacheInterface;
     use UnitTests\FixturedTestCase;
     use UnitTests\Fixtures\MultipleSubscriptionsFixture;
     use UnitTests\Fixtures\MultipleTweetsFixture;
@@ -730,7 +732,9 @@
             $encoder = $this->getContainer()->get('security.password_encoder');
             /** @var TagAwareCacheInterface $cache */
             $cache = $this->getContainer()->get('redis_adapter');
-            $userService = new UserService($this->getDoctrineManager(), $encoder, Mockery::mock(PaginatedFinderInterface::class));
+            /** @var PaginatedFinderInterface $finder */
+            $finder = Mockery::mock(PaginatedFinderInterface::class);
+            $userService = new UserService($this->getDoctrineManager(), $encoder, $finder);
             $tweetService = new TweetService($this->getDoctrineManager(), $cache);
             $subscriptionService = new SubscriptionService($this->getDoctrineManager(), $userService);
             $feedService = new FeedService(

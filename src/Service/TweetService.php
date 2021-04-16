@@ -67,4 +67,16 @@ class TweetService
 
         return $tweet;
     }
+
+    /**
+     * @param int[] $authorIds
+     *
+     * @return Tweet[]
+     */
+    public function getFeed(array $authorIds, int $count): array {
+        /** @var TweetRepository $tweetRepository */
+        $tweetRepository = $this->entityManager->getRepository(Tweet::class);
+
+        return $tweetRepository->getByAuthorIds($authorIds, $count);
+    }
 }

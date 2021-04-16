@@ -15,10 +15,13 @@ class FeedService
 
     private AsyncService $asyncService;
 
-    public function __construct(EntityManagerInterface $entityManager, SubscriptionService $subscriptionService, AsyncService $asyncService)
+    private TweetService $tweetService;
+
+    public function __construct(EntityManagerInterface $entityManager, SubscriptionService $subscriptionService, AsyncService $asyncService, TweetService $tweetService)
     {
         $this->entityManager = $entityManager;
         $this->subscriptionService = $subscriptionService;
+        $this->tweetService = $tweetService;
         $this->asyncService = $asyncService;
     }
 
@@ -27,6 +30,11 @@ class FeedService
         $feed = $this->getFeedFromRepository($userId);
 
         return $feed === null ? [] : array_slice($feed->getTweets(), -$count);
+    }
+
+    public function getFeedFromTweets(int $userId, int $count): array
+    {
+        return $this->tweetService->getFeed($this->subscriptionService->getAuthorIds($userId), $count);
     }
 
     public function spreadTweetAsync(Tweet $tweet): void

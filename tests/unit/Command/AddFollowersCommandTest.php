@@ -53,6 +53,6 @@ class AddFollowersCommandTest extends FixturedTestCase
         $commandTester->setInputs($inputs);
         $commandTester->execute($params, $options);
         $output = $commandTester->getDisplay();
-        static::assertSame($expected, $output);
+        static::assertStringEndsWith($expected, $output);
     }
 }

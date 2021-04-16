@@ -49,9 +49,8 @@ class AddFollowersCommandTest extends FixturedTestCase
         $author = $userService->findUserByLogin(MultipleUsersFixture::PRATCHETT);
         $params = ['authorId' => $author->getId()];
         $options = ['login' => $login];
-        if ($followersCount !== null) {
-            $params['count'] = $followersCount;
-        }
+        $inputs = $followersCount === null ? ["\n"] : ["$followersCount\n"];
+        $commandTester->setInputs($inputs);
         $commandTester->execute($params, $options);
         $output = $commandTester->getDisplay();
         static::assertSame($expected, $output);

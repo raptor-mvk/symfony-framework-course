@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 final class AddFollowersCommand extends Command
 {
@@ -45,7 +46,6 @@ final class AddFollowersCommand extends Command
             ->setHidden(true)
             ->setDescription('Adds followers to author')
             ->addArgument('authorId', InputArgument::REQUIRED, 'ID of author')
-            ->addArgument('count', InputArgument::OPTIONAL, 'How many followers should be added')
             ->addOption('login', 'l', InputOption::VALUE_REQUIRED, 'Follower login prefix');
     }
 
@@ -57,7 +57,9 @@ final class AddFollowersCommand extends Command
             $output->write("<error>User with ID $authorId doesn't exist</error>\n");
             return self::GENERAL_ERROR;
         }
-        $count = (int)($input->getArgument('count') ?? self::DEFAULT_FOLLOWERS);
+        $helper = $this->getHelper('question');
+        $question = new Question('How many followers you want to add?', self::DEFAULT_FOLLOWERS);
+        $count = (int)$helper->ask($input, $output, $question);
         if ($count < 0) {
             $output->write("<error>Count should be positive integer</error>\n");
             return self::GENERAL_ERROR;

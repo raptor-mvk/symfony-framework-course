@@ -3,25 +3,16 @@
 namespace App\Symfony;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
 class MigrationEventSubscriber implements EventSubscriber
 {
-    /**
-     * @return string[]
-     */
-    public function getSubscribedEvents(): array
+    public function getSubscribedEvents()
     {
         return ['postGenerateSchema'];
     }
 
-    /**
-     * @param GenerateSchemaEventArgs $args
-     *
-     * @throws SchemaException
-     */
-    public function postGenerateSchema(GenerateSchemaEventArgs $args): void
+    public function postGenerateSchema(GenerateSchemaEventArgs $args)
     {
         $schema = $args->getSchema();
         if (!$schema->hasNamespace('public')) {

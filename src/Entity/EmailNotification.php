@@ -1,89 +1,92 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTime;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use App\Entity\Traits\CreatedAtTrait;
+use App\Entity\Traits\UpdatedAtTrait;
+use Doctrine\ORM\Mapping;
 
 /**
- * @ORM\Table(name="email_notification")
- * @ORM\Entity
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ *
+ * @Mapping\Table(name="email_notification")
+ * @Mapping\Entity
+ * @Mapping\HasLifecycleCallbacks
  */
 class EmailNotification
 {
-    /**
-     * @ORM\Column(name="id", type="bigint", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private int $id;
+    use CreatedAtTrait;
+    use UpdatedAtTrait;
 
     /**
-     * @ORM\Column(type="string", length=128, nullable=false)
+     * @Mapping\Column(name="id", type="bigint", unique=true)
+     * @Mapping\Id
+     * @Mapping\GeneratedValue(strategy="IDENTITY")
      */
-    private string $email;
+    private $id;
 
     /**
-     * @ORM\Column(type="string", length=512, nullable=false)
+     * @var string
+     *
+     * @Mapping\Column(type="string", length=128, nullable=false)
      */
-    private string $text;
+    private $email;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="create")
+     * @var string
+     *
+     * @Mapping\Column(type="string", length=512, nullable=false)
      */
-    private DateTime $createdAt;
+    private $text;
 
     /**
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="update")
+     * @return int
      */
-    private DateTime $updatedAt;
-
-    public function getId(): int
+    public function getId()
     {
-        return $this->id;
+        return (int)$this->id;
     }
 
+    /**
+     * @param int $id
+     */
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
+    /**
+     * @return string
+     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     */
     public function setEmail(string $email): void
     {
         $this->email = $email;
     }
 
+    /**
+     * @return string
+     */
     public function getText(): string
     {
         return $this->text;
     }
 
+    /**
+     * @param string $text
+     */
     public function setText(string $text): void
     {
         $this->text = $text;
-    }
-
-    public function getCreatedAt(): DateTime {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(): void {
-        $this->createdAt = new DateTime();
-    }
-
-    public function getUpdatedAt(): DateTime {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(): void {
-        $this->updatedAt = new DateTime();
     }
 }

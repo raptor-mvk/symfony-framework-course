@@ -1,19 +1,17 @@
 <?php
 
-namespace UnitTests\Service;
+namespace CodeceptionUnitTests\Service;
 
 use App\Entity\User;
 use App\Service\SubscriptionService;
 use App\Service\UserService;
+use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Mockery;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class SubscriptionServiceTest extends TestCase
+class SubscriptionServiceTest extends Unit
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -54,12 +52,7 @@ class SubscriptionServiceTest extends TestCase
      */
     public function testSubscribeReturnsCorrectResult(int $authorId, int $followerId, bool $expected): void
     {
-        usleep(400000);
-        $userService = new UserService(
-            self::$entityManager,
-            Mockery::mock(UserPasswordEncoderInterface::class),
-            Mockery::mock(PaginatedFinderInterface::class)
-        );
+        $userService = new UserService(self::$entityManager);
         $subscriptionService = new SubscriptionService(self::$entityManager, $userService);
 
         $actual = $subscriptionService->subscribe($authorId, $followerId);
@@ -78,11 +71,7 @@ class SubscriptionServiceTest extends TestCase
         self::$entityManager->shouldReceive('getRepository')->with(User::class)->andReturn($repository);
         self::$entityManager->shouldReceive('persist');
         self::$entityManager->shouldReceive('flush');
-        $userService = new UserService(
-            self::$entityManager,
-            Mockery::mock(UserPasswordEncoderInterface::class),
-            Mockery::mock(PaginatedFinderInterface::class)
-        );
+        $userService = new UserService(self::$entityManager);
         $subscriptionService = new SubscriptionService(self::$entityManager, $userService);
 
         $subscriptionService->subscribe(self::INCORRECT_AUTHOR, self::INCORRECT_FOLLOWER);

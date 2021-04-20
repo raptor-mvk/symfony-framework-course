@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -7,22 +8,33 @@ use App\Entity\Tweet;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
-class FeedService
+/**
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ */
+final class FeedService
 {
-    private EntityManagerInterface $entityManager;
-
-    private SubscriptionService $subscriptionService;
-
-    private AsyncService $asyncService;
-
-    private TweetService $tweetService;
+    /** @var EntityManagerInterface */
+    private $entityManager;
+    /** @var SubscriptionService */
+    private $subscriptionService;
+    /** @var AsyncService */
+    private $asyncService;
+    /** @var TweetService */
+    private $tweetService;
 
     public function __construct(EntityManagerInterface $entityManager, SubscriptionService $subscriptionService, AsyncService $asyncService, TweetService $tweetService)
     {
         $this->entityManager = $entityManager;
         $this->subscriptionService = $subscriptionService;
-        $this->tweetService = $tweetService;
         $this->asyncService = $asyncService;
+        $this->tweetService = $tweetService;
+    }
+
+    public function getFeedFromTweets(int $userId, int $count): array
+    {
+        return $this->tweetService->getFeed($this->subscriptionService->getAuthorIds($userId), $count);
     }
 
     public function getFeed(int $userId, int $count): array
@@ -30,11 +42,6 @@ class FeedService
         $feed = $this->getFeedFromRepository($userId);
 
         return $feed === null ? [] : array_slice($feed->getTweets(), -$count);
-    }
-
-    public function getFeedFromTweets(int $userId, int $count): array
-    {
-        return $this->tweetService->getFeed($this->subscriptionService->getAuthorIds($userId), $count);
     }
 
     public function spreadTweetAsync(Tweet $tweet): void

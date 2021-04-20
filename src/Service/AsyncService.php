@@ -12,14 +12,14 @@ class AsyncService
     public const UPDATE_FEED = 'update_feed';
 
     /** @var ProducerInterface[] */
-    private array $producers;
+    private $producers;
 
     public function __construct()
     {
         $this->producers = [];
     }
 
-    public function registerProducer(string $producerName, ProducerInterface $producer): void
+    public function registerProducer(string $producerName, ProducerInterface $producer)
     {
         $this->producers[$producerName] = $producer;
     }

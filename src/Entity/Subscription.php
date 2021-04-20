@@ -1,59 +1,56 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTime;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\ORM\Mapping;
+use App\Entity\Traits\CreatedAtTrait;
+use App\Entity\Traits\UpdatedAtTrait;
 
 /**
- * @ORM\Table(
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ *
+ * @Mapping\Table(
  *     name="subscription",
- *     indexes={
- *         @ORM\Index(name="subscription__author_id__ind", columns={"author_id"}),
- *         @ORM\Index(name="subscription__follower_id__ind", columns={"follower_id"})
- *     }
+ *     uniqueConstraints={@Mapping\UniqueConstraint(columns={"author_id","follower_id"})},
+ *     indexes={@Mapping\Index(columns={"follower_id", "author_id"})},
  * )
- * @ORM\Entity
+ * @Mapping\Entity
+ * @Mapping\HasLifecycleCallbacks
  */
 class Subscription
 {
-    /**
-     * @ORM\Column(name="id", type="bigint", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private int $id;
+    use CreatedAtTrait;
+    use UpdatedAtTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="subscriptionAuthors")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     * })
+     * @Mapping\Column(name="id", type="bigint", unique=true)
+     * @Mapping\Id
+     * @Mapping\GeneratedValue(strategy="IDENTITY")
      */
-    private User $author;
+    private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="subscriptionFollowers")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="follower_id", referencedColumnName="id")
-     * })
-     */
-    private User $follower;
-
-    /**
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="create")
-     */
-    private DateTime $createdAt;
-
-    /**
-     * @var DateTime
+     * @var User
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="update")
+     * @Mapping\ManyToOne(targetEntity="User")
+     * @Mapping\JoinColumns({
+     *   @Mapping\JoinColumn(name="author_id", referencedColumnName="id")
+     * })
      */
-    private DateTime $updatedAt;
+    private $author;
+
+    /**
+     * @var User
+     *
+     * @Mapping\ManyToOne(targetEntity="User")
+     * @Mapping\JoinColumns({
+     *   @Mapping\JoinColumn(name="follower_id", referencedColumnName="id")
+     * })
+     */
+    private $follower;
 
     public function getId(): int
     {
@@ -83,21 +80,5 @@ class Subscription
     public function setFollower(User $follower): void
     {
         $this->follower = $follower;
-    }
-
-    public function getCreatedAt(): DateTime {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(): void {
-        $this->createdAt = new DateTime();
-    }
-
-    public function getUpdatedAt(): DateTime {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(): void {
-        $this->updatedAt = new DateTime();
     }
 }

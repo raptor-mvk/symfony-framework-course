@@ -1,27 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Entity\Tweet;
 use Doctrine\ORM\EntityRepository;
 
-class TweetRepository extends EntityRepository
+/**
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ */
+final class TweetRepository extends EntityRepository
 {
-    /**
-     * @return Tweet[]
-     */
-    public function getTweets(int $page, int $perPage): array
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('t')
-            ->from($this->getClassName(), 't')
-            ->orderBy('t.id', 'DESC')
-            ->setFirstResult($perPage * $page)
-            ->setMaxResults($perPage);
-
-        return $qb->getQuery()->enableResultCache(null, "tweets_{$page}_{$perPage}")->getResult();
-    }
-
     /**
      * @param int[] $authorIds
      *

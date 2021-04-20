@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Command;
 
-use App\DTO\UserDTO;
-use App\Entity\User;
+use App\DTO\SaveUserDTO;
 use App\Service\SubscriptionService;
 use App\Service\UserService;
 use Symfony\Component\Console\Command\Command;
@@ -14,7 +14,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Throwable;
 
+/**
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ */
 final class AddFollowersCommand extends Command
 {
     use LockableTrait;
@@ -23,15 +29,12 @@ final class AddFollowersCommand extends Command
     public const OK = 0;
     /** @var int */
     public const GENERAL_ERROR = 1;
+    private const DEFAULT_FOLLOWERS = 20;
 
-    /** @var int */
-    private const DEFAULT_FOLLOWERS = 100;
-    /** @var string */
-    private const DEFAULT_LOGIN_PREFIX = 'Reader #';
-
-    private UserService $userService;
-
-    private SubscriptionService $subscriptionService;
+    /** @var UserService */
+    private $userService;
+    /** @var SubscriptionService */
+    private $subscriptionService;
 
     public function __construct(UserService $userService, SubscriptionService $subscriptionService)
     {
@@ -45,14 +48,13 @@ final class AddFollowersCommand extends Command
         $this->setName('followers:add')
             ->setHidden(true)
             ->setDescription('Adds followers to author')
-            ->addArgument('authorId', InputArgument::REQUIRED, 'ID of author')
-            ->addOption('login', 'l', InputOption::VALUE_REQUIRED, 'Follower login prefix');
+            ->addArgument('authorId', InputArgument::REQUIRED, 'ID of author');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $authorId = (int)$input->getArgument('authorId');
-        $user = $this->userService->findUserById($authorId);
+        $user = $this->userService->findById($authorId);
         if ($user === null) {
             $output->write("<error>User with ID $authorId doesn't exist</error>\n");
             return self::GENERAL_ERROR;
@@ -64,9 +66,20 @@ final class AddFollowersCommand extends Command
             $output->write("<error>Count should be positive integer</error>\n");
             return self::GENERAL_ERROR;
         }
-        $login = $input->getOption('login') ?? self::DEFAULT_LOGIN_PREFIX;
-        $result = $this->subscriptionService->addFollowers($user, $login.$authorId, $count);
-        $output->write("<info>$result followers were created</info>\n");
+        $createdFollowers = 0;
+        for ($i = 0; $i < $count; $i++) {
+            try {
+                $saveUserDTO = new SaveUserDTO("Reader #$authorId.$i", '+1111111111', 'no@mail.com', true);
+                $userId = $this->userService->saveUser($saveUserDTO);
+                if ($userId !== null) {
+                    $this->subscriptionService->subscribe($authorId, $userId);
+                    $createdFollowers++;
+                }
+            } catch (Throwable $e) {
+                $output->write("<error>User #$i couldn't be created</error>\n");
+            }
+        }
+        $output->write("<info>$createdFollowers followers were created</info>\n");
 
         return self::OK;
     }

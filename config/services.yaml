@@ -14,87 +14,35 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
-            - '../src/Tests/'
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
-        resource: '../src/Controller/'
+        resource: '../src/Controller'
         exclude: '../src/Controller/Common/*'
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Symfony\MigrationEventSubscriber:
+    doctrineMigrationDiffListener:
+        class: App\Symfony\MigrationEventSubscriber
         tags:
             - { name: doctrine.event_subscriber, connection: default }
-
-    strong_formatter:
-        class: App\Service\FormatService
-        factory: ['App\Service\FormatServiceFactory', 'strongFormatService']
-        tags: ['app.formatter_service']
-
-    cite_formatter:
-        class: App\Service\FormatService
-        factory: ['@App\Service\FormatServiceFactory', 'citeFormatService']
-        tags: ['app.formatter_service']
-
-    main_header_formatter:
-        class: App\Service\FormatService
-        factory: ['@App\Service\FormatServiceFactory', 'headerFormatService']
-        arguments: [1]
-
-    App\Controller\WorldController:
-        arguments:
-            $formatService: '@main_header_formatter'
-        tags: ['controller.service_arguments']
-
-    hello_greeter:
-        class: App\Service\GreeterService
-        arguments:
-            $greet: 'Hello'
-        tags:
-          - { name: 'app.greeter_service', priority: 3 }
-
-    greetings_greeter:
-        class: App\Service\GreeterService
-        arguments:
-            $greet: 'Greetings'
-        tags:
-            - { name: 'app.greeter_service', priority: 2 }
-
-    hi_greeter:
-        class: App\Service\GreeterService
-        arguments:
-            $greet: 'Hi'
-        tags:
-            - { name: 'app.greeter_service', priority: 1 }
-
-    list_formatter:
-        class: App\Service\FormatService
-        calls:
-            - [setTag, ['ol']]
-
-    list_item_formatter:
-        class: App\Service\FormatService
-        calls:
-            - [setTag, ['li']]
-        tags: ['app.formatter_service']
-
-    App\Service\AuthService:
-        arguments:
-            $tokenTTL: '%env(JWT_TTL_SEC)%'
 
     monolog.formatter.app_formatter:
         class: Monolog\Formatter\LineFormatter
         arguments:
             - "[%%level_name%%]: [%%datetime%%] %%message%%\n"
+
+    App\Service\AsyncService:
+        calls:
+            - ['registerProducer', [!php/const App\Service\AsyncService::ADD_FOLLOWER, '@old_sound_rabbit_mq.add_follower_producer']]
+            - ['registerProducer', [!php/const App\Service\AsyncService::PUBLISH_TWEET, '@old_sound_rabbit_mq.publish_tweet_producer']]
+            - ['registerProducer', [!php/const App\Service\AsyncService::SEND_NOTIFICATION, '@old_sound_rabbit_mq.send_notification_producer']]
+            - ['registerProducer', [!php/const App\Service\AsyncService::UPDATE_FEED, '@old_sound_rabbit_mq.update_feed_producer']]
 
     App\Client\StatsdAPIClient:
         arguments:
@@ -102,79 +50,52 @@ services:
             - 8125
             - my_app
 
-    redis_client:
-        class: Redis
-        factory: Symfony\Component\Cache\Adapter\RedisAdapter::createConnection
-        arguments:
-            - '%env(REDIS_DSN)%'
-
-    redis_adapter:
-        class: Symfony\Component\Cache\Adapter\RedisTagAwareAdapter
-        arguments:
-            - '@redis_client'
-            - 'my_app'
-
-    App\Service\TweetService:
-        arguments:
-            $cache: '@redis_adapter'
-
-    App\Service\AsyncService:
-        calls:
-            - ['registerProducer', [!php/const App\Service\AsyncService::ADD_FOLLOWER, '@old_sound_rabbit_mq.add_followers_producer']]
-            - ['registerProducer', [!php/const App\Service\AsyncService::PUBLISH_TWEET, '@old_sound_rabbit_mq.publish_tweet_producer']]
-            - ['registerProducer', [!php/const App\Service\AsyncService::SEND_NOTIFICATION, '@old_sound_rabbit_mq.send_notification_producer']]
-            - ['registerProducer', [!php/const App\Service\AsyncService::UPDATE_FEED, '@old_sound_rabbit_mq.update_feed_producer']]
-
-    App\Consumer\UpdateFeed\Consumer0:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer0:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_0'
 
-    App\Consumer\UpdateFeed\Consumer1:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer1:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_1'
 
-    App\Consumer\UpdateFeed\Consumer2:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer2:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_2'
 
-    App\Consumer\UpdateFeed\Consumer3:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer3:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_3'
 
-    App\Consumer\UpdateFeed\Consumer4:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer4:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_4'
 
-    App\Consumer\UpdateFeed\Consumer5:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer5:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_5'
 
-    App\Consumer\UpdateFeed\Consumer6:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer6:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_6'
 
-    App\Consumer\UpdateFeed\Consumer7:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer7:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_7'
 
-    App\Consumer\UpdateFeed\Consumer8:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer8:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_8'
 
-    App\Consumer\UpdateFeed\Consumer9:
-        class: App\Consumer\UpdateFeed\Consumer
+    App\Consumer\UpdateFeedConsumer\Consumer9:
+        class: App\Consumer\UpdateFeedConsumer\Consumer
         arguments:
             $key: 'update_feed_9'
-
-    App\Service\UserService:
-        arguments:
-            $finder: '@fos_elastica.finder.user'

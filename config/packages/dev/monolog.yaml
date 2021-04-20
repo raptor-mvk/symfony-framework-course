@@ -1,5 +1,4 @@
 monolog:
-    channels: [elasticsearch]
     handlers:
         main:
             type: fingers_crossed
@@ -23,25 +22,3 @@ monolog:
             type: console
             process_psr_3_messages: false
             channels: ["!event", "!doctrine", "!console"]
-        sentry:
-            type: service
-            id: Sentry\Monolog\Handler
-        elasticsearch:
-            type: service
-            id: Symfony\Bridge\Monolog\Handler\ElasticsearchLogstashHandler
-            channels: elasticsearch
-
-services:
-    Psr\Log\NullLogger:
-        class: Psr\Log\NullLogger
-
-    http_client_without_logs:
-        class: Symfony\Component\HttpClient\CurlHttpClient
-        calls:
-            - [setLogger, ['@Psr\Log\NullLogger']]
-
-    Symfony\Bridge\Monolog\Handler\ElasticsearchLogstashHandler:
-        arguments:
-            - 'http://elasticsearch:9200'
-            - 'monolog'
-            - '@http_client_without_logs'

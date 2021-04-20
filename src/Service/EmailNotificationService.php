@@ -1,13 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Service;
 
 use App\Entity\EmailNotification;
 use Doctrine\ORM\EntityManagerInterface;
 
-class EmailNotificationService
+/**
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ */
+final class EmailNotificationService
 {
-    private EntityManagerInterface $entityManager;
+    /** @var EntityManagerInterface */
+    private $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

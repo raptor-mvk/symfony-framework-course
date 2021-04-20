@@ -1,13 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Service;
 
 use App\Entity\SmsNotification;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ */
 final class SmsNotificationService
 {
-    private EntityManagerInterface $entityManager;
+    /** @var EntityManagerInterface */
+    private $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

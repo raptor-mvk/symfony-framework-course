@@ -1,95 +1,98 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTime;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use App\Entity\Traits\CreatedAtTrait;
+use App\Entity\Traits\UpdatedAtTrait;
+use Doctrine\ORM\Mapping;
 
 /**
- * @ORM\Table(
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ *
+ * @Mapping\Table(
  *     name="feed",
- *     uniqueConstraints={@ORM\UniqueConstraint(columns={"reader_id"})}
+ *     uniqueConstraints={@Mapping\UniqueConstraint(columns={"reader_id"})}
  * )
- * @ORM\Entity
+ * @Mapping\Entity
+ * @Mapping\HasLifecycleCallbacks
  */
 class Feed
 {
-    /**
-     * @ORM\Column(name="id", type="bigint", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private int $id;
+    use CreatedAtTrait;
+    use UpdatedAtTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *     @ORM\JoinColumn(name="reader_id", referencedColumnName="id")
+     * @Mapping\Column(name="id", type="bigint", unique=true)
+     * @Mapping\Id
+     * @Mapping\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var User
+     *
+     * @Mapping\ManyToOne(targetEntity="User")
+     * @Mapping\JoinColumns({
+     *     @Mapping\JoinColumn(name="reader_id", referencedColumnName="id")
      * })
      */
-    private User $reader;
+    private $reader;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
+     * @var array | null
+     *
+     * @Mapping\Column(type="json_array", nullable=true)
      */
-    private ?array $tweets;
+    private $tweets;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="create")
+     * @return mixed
      */
-    private DateTime $createdAt;
-
-    /**
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="update")
-     */
-    private DateTime $updatedAt;
-
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function setId(int $id): void
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
     {
         $this->id = $id;
     }
 
+    /**
+     * @return User
+     */
     public function getReader(): User
     {
         return $this->reader;
     }
 
+    /**
+     * @param User $reader
+     */
     public function setReader(User $reader): void
     {
         $this->reader = $reader;
     }
 
+    /**
+     * @return array|null
+     */
     public function getTweets(): ?array
     {
         return $this->tweets;
     }
 
+    /**
+     * @param array|null $tweets
+     */
     public function setTweets(?array $tweets): void
     {
         $this->tweets = $tweets;
-    }
-
-    public function getCreatedAt(): DateTime {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(): void {
-        $this->createdAt = new DateTime();
-    }
-
-    public function getUpdatedAt(): DateTime {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(): void {
-        $this->updatedAt = new DateTime();
     }
 }

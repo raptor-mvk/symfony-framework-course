@@ -1,95 +1,50 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Api\v1;
 
-use App\DTO\UserDTO;
-use App\Entity\User;
-use App\Security\Voter\UserVoter;
+use App\DTO\SaveUserDTO;
+use App\Service\SubscriptionService;
+use App\Service\TweetService;
 use App\Service\UserService;
-use JsonException;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\Controller\Annotations;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
+use FOS\RestBundle\View\View;
+use Throwable;
 
-/** @Route("/api/v1/user") */
-class UserController
+/**
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ *
+ * @Annotations\Route("/api/v1/user")
+ */
+final class UserController extends AbstractFOSRestController
 {
-    private UserService $userService;
+    /** @var UserService */
+    private $userService;
 
-    private AuthorizationCheckerInterface $authorizationChecker;
-
-    public function __construct(UserService $userService, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(UserService $userService)
     {
         $this->userService = $userService;
-        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
-     * @Route("", methods={"POST"})
+     * @Annotations\Post("")
      *
-     * @throws JsonException
+     * @RequestParam(name="login")
+     * @RequestParam(name="phone")
+     * @RequestParam(name="email")
+     * @RequestParam(name="preferEmail", requirements="0|1")
      */
-    public function saveUserAction(Request $request): Response
+    public function addUserAction(string $login, string $phone, string $email, string $preferEmail): View
     {
-        $userDTO = new UserDTO(
-            [
-                'login' => $request->request->get('login'),
-                'password' => $request->request->get('password'),
-                'roles' => $request->request->get('roles'),
-            ]
-        );
-        $userId = $this->userService->saveUser(new User(), $userDTO);
+        $userId = $this->userService->saveUser(new SaveUserDTO($login, $phone, $email, $preferEmail === '1'));
         [$data, $code] = $userId === null ?
-            [['success' => false], 400] :
+            [['success' => false, 400]] :
             [['success' => true, 'userId' => $userId], 200];
 
-        return new JsonResponse($data, $code);
-    }
-
-    /**
-     * @Route("", methods={"GET"})
-     */
-    public function getUsersAction(Request $request): Response
-    {
-        $perPage = $request->query->get('perPage');
-        $page = $request->query->get('page');
-        $users = $this->userService->getUsers($page ?? 0, $perPage ?? 20);
-        $code = empty($users) ? 204 : 200;
-
-        return new JsonResponse(['users' => array_map(static fn(User $user) => $user->toArray(), $users)], $code);
-    }
-
-    /**
-     * @Route("/{id}", methods={"DELETE"}, requirements={"id":"\d+"})
-     */
-    public function deleteUserAction(int $id): Response
-    {
-        $user = $this->userService->findUserById($id);
-        if (!$this->authorizationChecker->isGranted(UserVoter::DELETE, $user)) {
-            return new JsonResponse('Access denied', 403);
-        }
-        $result = $this->userService->deleteUserById($id);
-
-        return new JsonResponse(['success' => $result], $result ? 200 : 404);
-    }
-
-    /**
-     * @Route("", methods={"PATCH"})
-     */
-    public function updateUserAction(Request $request): Response
-    {
-        $userId = $request->request->get('userId');
-        $userDTO = new UserDTO(
-            [
-                'login' => $request->request->get('login'),
-                'password' => $request->request->get('password'),
-                'roles' => $request->request->get('roles'),
-            ]
-        );
-        $result = $this->userService->updateUser($userId, $userDTO);
-
-        return new JsonResponse(['success' => $result], $result ? 200 : 404);
+        return View::create($data, $code);
     }
 }

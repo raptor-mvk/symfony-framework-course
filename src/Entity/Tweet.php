@@ -1,63 +1,54 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTime;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JMS;
+use App\Entity\Traits\CreatedAtTrait;
+use App\Entity\Traits\UpdatedAtTrait;
+use Doctrine\ORM\Mapping;
 
 /**
- * @ORM\Table(
- *     name="tweet",
- *     indexes={
- *         @ORM\Index(name="tweet__author_id__ind", columns={"author_id"})
- *     }
- * )
- * @ORM\Entity(repositoryClass="App\Repository\TweetRepository")
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ *
+ * @Mapping\Table(name="tweet")
+ * @Mapping\Entity
+ * @Mapping\Entity(repositoryClass="App\Repository\TweetRepository")
+ * @Mapping\HasLifecycleCallbacks
  */
 class Tweet
 {
-    /**
-     * @ORM\Column(name="id", type="bigint", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private int $id;
+    use CreatedAtTrait;
+    use UpdatedAtTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="tweets")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     * })
-     * @JMS\Groups({"elastica"})
+     * @Mapping\Column(name="id", type="bigint", unique=true)
+     * @Mapping\Id
+     * @Mapping\GeneratedValue(strategy="IDENTITY")
      */
-    private User $author;
+    private $id;
 
     /**
-     * @ORM\Column(type="string", length=140, nullable=false)
-     * @JMS\Type("string")
-     * @JMS\Groups({"elastica"})
-     */
-    private string $text;
-
-    /**
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="create")
-     */
-    private DateTime $createdAt;
-
-    /**
-     * @var DateTime
+     * @var User
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     * @Gedmo\Timestampable(on="update")
+     * @Mapping\ManyToOne(targetEntity="User")
+     * @Mapping\JoinColumns({
+     *   @Mapping\JoinColumn(name="author_id", referencedColumnName="id")
+     * })
      */
-    private DateTime $updatedAt;
+    private $author;
+
+    /**
+     * @var string
+     *
+     * @Mapping\Column(type="string", length=140, nullable=false)
+     */
+    private $text;
 
     public function getId(): int
     {
-        return $this->id;
+        return (int)$this->id;
     }
 
     public function setId(int $id): void
@@ -85,40 +76,13 @@ class Tweet
         $this->text = $text;
     }
 
-    public function getCreatedAt(): DateTime {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(): void {
-        $this->createdAt = DateTime::createFromFormat('U', (string)time());
-    }
-
-    public function getUpdatedAt(): DateTime {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(): void {
-        $this->updatedAt = new DateTime();
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'login' => $this->author->getLogin(),
-            'text' => $this->text,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
-        ];
-    }
-
     public function toFeed(): array
     {
         return [
             'id' => $this->id,
-            'author' => isset($this->author) ? $this->author->getLogin() : null,
+            'author' => $this->author !== null ? $this->author->getLogin() : null,
             'text' => $this->text,
-            'createdAt' => isset($this->createdAt) ? $this->createdAt->format('Y-m-d h:i:s') : '',
+            'createdAt' => $this->createdAt !== null ? $this->createdAt->format('Y-m-d h:i:s') : '',
         ];
     }
 

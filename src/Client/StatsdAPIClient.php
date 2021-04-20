@@ -9,7 +9,8 @@ class StatsdAPIClient
 {
     private const DEFAULT_SAMPLE_RATE = 1.0;
 
-    private Client $client;
+    /** @var Client */
+    private $client;
 
     public function __construct(string $host, int $port, string $namespace)
     {
@@ -17,7 +18,7 @@ class StatsdAPIClient
         $this->client = new Client($connection, $namespace);
     }
 
-    public function increment(string $key, ?float $sampleRate = null, ?array $tags = null): void
+    public function increment(string $key, ?float $sampleRate = null, ?array $tags = null)
     {
         $this->client->increment($key, $sampleRate ?? self::DEFAULT_SAMPLE_RATE, $tags ?? []);
     }

@@ -1,10 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace App\DTO;
 
-class SendNotificationDTO
+/**
+ * @author Mikhail Kamorin aka raptor_MVK
+ *
+ * @copyright 2020, raptor_MVK
+ */
+final class SendNotificationDTO
 {
-    private array $payload;
+    /** @var array */
+    private $payload;
 
     public function __construct(int $userId, string $text)
     {

@@ -11,6 +11,7 @@ use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\View\View;
+use OpenApi\Annotations as OA;
 
 /**
  * @author Mikhail Kamorin aka raptor_MVK
@@ -38,6 +39,11 @@ final class SubscriptionController
     /**
      * @Annotations\Get("/list-by-author")
      *
+     * @OA\Get(
+     *     operationId="listByAuthor",
+     *     tags={"Подписки"}
+     * )
+     *
      * @QueryParam(name="authorId", requirements="\d+")
      */
     public function listSubscriptionByAuthorAction(int $authorId): View
@@ -50,6 +56,11 @@ final class SubscriptionController
 
     /**
      * @Annotations\Get("/list-by-follower")
+     *
+     * @OA\Get(
+     *     operationId="listByFollower",
+     *     tags={"Подписки"}
+     * )
      *
      * @QueryParam(name="followerId", requirements="\d+")
      */
@@ -64,6 +75,11 @@ final class SubscriptionController
     /**
      * @Annotations\Post("")
      *
+     * @OA\Post(
+     *     operationId="subscribe",
+     *     tags={"Подписки"}
+     * )
+     *
      * @RequestParam(name="authorId", requirements="\d+")
      * @RequestParam(name="followerId", requirements="\d+")
      */
@@ -77,6 +93,11 @@ final class SubscriptionController
 
     /**
      * @Annotations\Post("/followers")
+     *
+     * @OA\Post(
+     *     operationId="addFollowers",
+     *     tags={"Подписки"}
+     * )
      *
      * @RequestParam(name="userId", requirements="\d+")
      * @RequestParam(name="followerLogin")

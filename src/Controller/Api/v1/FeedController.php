@@ -6,6 +6,7 @@ namespace App\Controller\Api\v1;
 use App\Service\FeedService;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\View\View;
+use OpenApi\Annotations as OA;
 
 /**
  * @author Mikhail Kamorin aka raptor_MVK
@@ -28,8 +29,12 @@ final class FeedController
     }
 
     /**
-     * @Annotations\Get("")
-     *
+     * @OA\Get(
+     *     operationId="getFeed",
+     *     tags={"Лента"},
+     *     @OA\Parameter(name="userId", in="query", description="ID пользователя", example="135"),
+     *     @OA\Parameter(name="count", in="query", description="Количество твитов в ленте", example="5")
+     * )
      * @Annotations\QueryParam(name="userId", requirements="\d+")
      * @Annotations\QueryParam(name="count", requirements="\d+", nullable=true)
      */

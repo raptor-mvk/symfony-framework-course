@@ -12,6 +12,7 @@ use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\View\View;
+use OpenApi\Annotations as OA;
 
 /**
  * @author Mikhail Kamorin aka raptor_MVK
@@ -42,6 +43,11 @@ final class TweetController extends AbstractFOSRestController
     /**
      * @Annotations\Post("")
      *
+     * @OA\Post(
+     *     operationId="postTweet",
+     *     tags={"Твиты"}
+     * )
+     *
      * @RequestParam(name="authorId", requirements="\d+")
      * @RequestParam(name="text")
      * @RequestParam(name="async", requirements="0|1", nullable=true)
@@ -64,6 +70,11 @@ final class TweetController extends AbstractFOSRestController
 
     /**
      * @Annotations\Get("/feed")
+     *
+     * @OA\Post(
+     *     operationId="getFeedFromTweets",
+     *     tags={"Твиты"}
+     * )
      *
      * @QueryParam(name="userId", requirements="\d+")
      * @QueryParam(name="count", requirements="\d+", nullable=true)

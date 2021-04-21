@@ -12,6 +12,7 @@ use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\View\View;
 use Throwable;
+use OpenApi\Annotations as OA;
 
 /**
  * @author Mikhail Kamorin aka raptor_MVK
@@ -33,6 +34,10 @@ final class UserController extends AbstractFOSRestController
     /**
      * @Annotations\Post("")
      *
+     * @OA\Post(
+     *     operationId="addUser",
+     *     tags={"Пользователи"}
+     * )
      * @RequestParam(name="login")
      * @RequestParam(name="phone")
      * @RequestParam(name="email")

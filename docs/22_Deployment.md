@@ -792,6 +792,6 @@
         - ssh $SSH_USER@$SERVER1 "unlink /var/www/demo/current &&
               mv -Tf /var/www/demo/previous /var/www/demo/current &&
               cd /var/www/demo/current &&
-              sh ./rollback.sh"
+              sh ./rollback.sh $SERVER1"
       when: manual
     ```

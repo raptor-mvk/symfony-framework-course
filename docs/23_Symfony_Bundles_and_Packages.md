@@ -508,7 +508,7 @@
             return $this->payload['text'];
         }
     }
-     ```
+    ```
 1. Переносим в пространство имён `FeedBundle` и исправляем класс `App\Consumer\UpdateFeedConsumer\Input\Message`
     ```php
     <?php
@@ -556,7 +556,7 @@
             return $this->preferred;
         }
     }
-     ```
+    ```
 1. Переносим в пространство имён `FeedBundle` и исправляем класс `App\Entity\Feed`
     ```php
     <?php
@@ -586,7 +586,7 @@
         /**
          * @ORM\Column(name="reader_id", type="bigint", nullable=false)
          */
-        private $readerId;
+        private int $readerId;
     
         /**
          * @ORM\Column(type="json", nullable=true)
@@ -651,7 +651,7 @@
             $this->updatedAt = new DateTime();
         }
     }
-     ```
+    ```
 1. Копируем в пространство имён `FeedBundle` и исправляем класс `App\Service\AsyncService`
     ```php
     <?php
@@ -703,7 +703,7 @@
             return $sentCount;
         }
     }
-     ```
+    ```
 1. Переносим в пространство имён `FeedBundle` и исправляем класс `App\Service\FeedService`
     ```php
     <?php
@@ -718,7 +718,7 @@
     {
         private EntityManagerInterface $entityManager;
     
-        public function __construct(EntityManagerInterface $entityManager, )
+        public function __construct(EntityManagerInterface $entityManager)
         {
             $this->entityManager = $entityManager;
         }
@@ -758,7 +758,7 @@
             return $feed;
         }
     }
-     ```
+    ```
 1. Переносим в пространство имён `FeedBundle` и исправляем класс `App\Consumer\UpdateFeedConsumer\Consumer`
     ```php
     <?php
@@ -835,7 +835,7 @@
             return self::MSG_REJECT;
         }
     }
-     ```
+    ```
 1. Создаём класс `FeedBundle\Facade\FeedFacade`
     ```php
     <?php
@@ -971,7 +971,7 @@
             return self::MSG_REJECT;
         }
     }
-     ```
+    ```
 1. В классе `App\Service\AsyncService` убираем константу `SEND_NOTIFICATION`
 1. Исправляем класс `App\Controller\Api\SaveTweet\v1`
     ```php
@@ -1027,8 +1027,8 @@
             return $this->handleView($this->view(['success' => $success], $code));
         }
     }
-     ```
-1. Исправляем класс `App\Controller\Api\v1\FeedController`
+    ```
+1. Исправляем класс `App\Controller\Api\GetFeed\v1\FeedController`
     ```
     <?php
     
@@ -1065,7 +1065,7 @@
             return View::create(['tweets' => $tweets], $code);
         }
     }
-     ```
+    ```
 1. Создаём файл `src/FeedBundle/Resources/config/services.yaml`
     ```yaml
     services:
@@ -1212,7 +1212,7 @@
             return View::create(['tweets' => $tweets], $code);
         }
     }
-     ```
+    ```
 1. Переносим класс `FeedBundle\Facade\FeedFacade` в пространство имён `App` и исправляем
     ```
     <?php
@@ -1223,8 +1223,7 @@
     
     class FeedFacade
     {
-        /** @var FeedClient */
-        private $feedClient;
+        private FeedClient $feedClient;
     
         public function __construct(FeedClient $feedClient)
         {

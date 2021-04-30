@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace FeedBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,12 +23,9 @@ class Feed
     private int $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *     @ORM\JoinColumn(name="reader_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="reader_id", type="bigint", nullable=false)
      */
-    private User $reader;
+    private $readerId;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -57,14 +54,14 @@ class Feed
         $this->id = $id;
     }
 
-    public function getReader(): User
+    public function getReaderId(): int
     {
-        return $this->reader;
+        return $this->readerId;
     }
 
-    public function setReader(User $reader): void
+    public function setReaderId(int $readerId): void
     {
-        $this->reader = $reader;
+        $this->readerId = $readerId;
     }
 
     public function getTweets(): ?array

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\GetFeed\v1;
 
-use App\Service\FeedService;
+use FeedBundle\Facade\FeedFacade;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 
@@ -11,11 +11,11 @@ final class Controller
     /** @var int */
     private const DEFAULT_FEED_SIZE = 20;
 
-    private FeedService $feedService;
+    private FeedFacade $feedFacade;
 
-    public function __construct(FeedService $feedService)
+    public function __construct(FeedFacade $feedFacade)
     {
-        $this->feedService = $feedService;
+        $this->feedFacade = $feedFacade;
     }
 
     /**
@@ -27,7 +27,7 @@ final class Controller
     public function getFeedAction(int $userId, ?int $count = null): View
     {
         $count = $count ?? self::DEFAULT_FEED_SIZE;
-        $tweets = $this->feedService->getFeed($userId, $count);
+        $tweets = $this->feedFacade->getFeed($userId, $count);
         $code = empty($tweets) ? 204 : 200;
 
         return View::create(['tweets' => $tweets], $code);

@@ -3,11 +3,12 @@
 namespace App\Controller\Api\SaveTweet\v1;
 
 use App\Controller\Common\ErrorResponseTrait;
-use App\Service\FeedService;
+use App\Service\AsyncService;
 use App\Service\TweetService;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\ControllerTrait;
+use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,12 +18,12 @@ class Controller
 
     private TweetService $tweetService;
 
-    private FeedService $feedService;
+    private AsyncService $asyncService;
 
-    public function __construct(TweetService $tweetService, FeedService $feedService, ViewHandlerInterface $viewHandler)
+    public function __construct(TweetService $tweetService, AsyncService $asyncService, ViewHandlerInterface $viewHandler)
     {
         $this->tweetService = $tweetService;
-        $this->feedService = $feedService;
+        $this->asyncService = $asyncService;
         $this->viewhandler = $viewHandler;
     }
 
@@ -39,9 +40,9 @@ class Controller
         $success = $tweet !== null;
         if ($success) {
             if ($async === 1) {
-                $this->feedService->spreadTweetAsync($tweet);
+                $this->asyncService->publishToExchange(AsyncService::PUBLISH_TWEET, $tweet->toAMPQMessage());
             } else {
-                $this->feedService->spreadTweetSync($tweet);
+                return $this->handleView(View::create(['message' => 'Sync post is no longer supported'], 400));
             }
         }
         $code = $success ? 200 : 400;

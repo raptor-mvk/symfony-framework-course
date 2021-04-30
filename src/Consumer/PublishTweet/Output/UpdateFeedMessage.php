@@ -2,13 +2,16 @@
 
 namespace App\Consumer\PublishTweet\Output;
 
+use App\Entity\Tweet;
+use App\Entity\User;
+
 final class UpdateFeedMessage
 {
     private array $payload;
 
-    public function __construct(int $tweetId, int $followerId)
+    public function __construct(Tweet $tweet, User $follower)
     {
-        $this->payload = ['tweetId' => $tweetId, 'followerId' => $followerId];
+        $this->payload = array_merge($tweet->toFeed(), ['followerId' => $follower->getId(), 'preferred' => $follower->getPreferred()]);
     }
 
     public function toAMQPMessage(): string

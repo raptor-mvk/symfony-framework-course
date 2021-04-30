@@ -17,6 +17,7 @@
         "lexik/jwt-authentication-bundle": "^2.11",
         "nyholm/psr7": "^1.4",
         "php-amqplib/rabbitmq-bundle": "^2.6",
+        "raptor-mvk/statsd-bundle": "dev-master",
         "sensio/framework-extra-bundle": "^6.1",
         "sentry/sentry-symfony": "^4.0",
         "stof/doctrine-extensions-bundle": "^1.5",
@@ -45,8 +46,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/",
-            "StatsdBundle\\": "src/StatsdBundle"
+            "App\\": "src/"
         }
     },
     "autoload-dev": {
@@ -84,5 +84,11 @@
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "mockery/mockery": "^1.4",
         "symfony/phpunit-bridge": "^5.2"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:raptor-mvk/statsd-bundle.git"
+        }
+    ]
 }

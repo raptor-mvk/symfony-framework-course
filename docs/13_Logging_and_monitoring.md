@@ -215,7 +215,7 @@
     ```
 1. Проверяем, что можем зайти в интерфейс Graphite по адресу `localhost:8000`
 1. Проверяем, что можем зайти в интерфейс Grafana по адресу `localhost:3000`, логин / пароль - `admin` / `admin`
-1. Добавляем класс `App\Client\StatsdAPIClient`
+1. Добавляем класс `StatsdBundle\Client\StatsdAPIClient`
     ```php
     <?php
     
@@ -244,7 +244,7 @@
     ```
 1. Добавляем в `config/services.yaml` описание сервиса statsd API-клиента
     ```yaml
-    App\Client\StatsdAPIClient:
+    StatsdBundle\Client\StatsdAPIClient:
         arguments: 
             - graphite
             - 8125

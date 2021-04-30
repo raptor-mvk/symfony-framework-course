@@ -20,6 +20,7 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+            - '../src/StatsdBundle/'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -95,12 +96,6 @@ services:
         class: Monolog\Formatter\LineFormatter
         arguments:
             - "[%%level_name%%]: [%%datetime%%] %%message%%\n"
-
-    App\Client\StatsdAPIClient:
-        arguments:
-            - graphite
-            - 8125
-            - my_app
 
     redis_client:
         class: Redis

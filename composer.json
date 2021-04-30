@@ -13,6 +13,7 @@
         "domnikl/statsd": "^3.0",
         "friendsofsymfony/elastica-bundle": "6.0.x-dev",
         "friendsofsymfony/rest-bundle": "^3.0",
+        "guzzlehttp/guzzle": "^7.3",
         "jms/serializer-bundle": "^3.8",
         "lexik/jwt-authentication-bundle": "^2.11",
         "nyholm/psr7": "^1.4",

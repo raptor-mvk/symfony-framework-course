@@ -1,3 +1,8 @@
 hello_world:
   path: /world/hello
   controller: App\Controller\WorldController::hello
+
+server_api:
+  resource: "@FeedBundle/Controller/ServerApi"
+  type: annotation
+  prefix: /server-api

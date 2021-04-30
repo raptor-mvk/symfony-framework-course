@@ -7,6 +7,10 @@ services:
     resource: '../../*'
     exclude: '../../{DependencyInjection,Entity}'
 
+  FeedBundle\Controller\:
+    resource: '../../Controller/'
+    tags: ['controller.service_arguments']
+
   FeedBundle\Service\AsyncService:
     calls:
       - ['registerProducer', [!php/const FeedBundle\Service\AsyncService::SEND_NOTIFICATION, '@old_sound_rabbit_mq.send_notification_producer']]

@@ -122,3 +122,11 @@ services:
     App\Service\UserService:
         arguments:
             $finder: '@fos_elastica.finder.user'
+
+    feed_http_client:
+        class: GuzzleHttp\Client
+
+    App\Client\FeedClient:
+        arguments:
+            - '@feed_http_client'
+            - 'http://nginx:80'

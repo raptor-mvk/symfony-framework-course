@@ -130,3 +130,12 @@ services:
         arguments:
             - '@feed_http_client'
             - 'http://nginx:80'
+
+    builder_factory:
+        class: PhpParser\BuilderFactory
+
+    App\Command\MakeApplicationCommand:
+        tags: [ 'maker.command' ]
+        arguments:
+            - '@maker.file_manager'
+            - '@builder_factory'

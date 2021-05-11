@@ -48,7 +48,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "FeedBundle\\": "src/FeedBundle"
+            "FeedBundle\\": "src/FeedBundle",
+            "Generated\\": "src/_GENERATED"
         }
     },
     "autoload-dev": {

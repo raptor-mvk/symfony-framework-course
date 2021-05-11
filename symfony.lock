@@ -141,6 +141,9 @@
     "gedmo/doctrine-extensions": {
         "version": "v3.0.3"
     },
+    "guzzlehttp/guzzle": {
+        "version": "7.3.0"
+    },
     "guzzlehttp/promises": {
         "version": "1.4.1"
     },
@@ -293,6 +296,9 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
+    },
+    "raptor-mvk/statsd-bundle": {
+        "version": "dev-master"
     },
     "react/promise": {
         "version": "v2.8.0"

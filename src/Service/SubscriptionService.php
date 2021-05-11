@@ -78,6 +78,19 @@ class SubscriptionService
     }
 
     /**
+     * @return User[]
+     */
+    public function getFollowers(int $authorId): array
+    {
+        $subscriptions = $this->getSubscriptionsByAuthorId($authorId);
+        $mapper = static function(Subscription $subscription) {
+            return $subscription->getFollower();
+        };
+
+        return array_map($mapper, $subscriptions);
+    }
+
+    /**
      * @return int[]
      */
     public function getFollowerIds(int $authorId): array

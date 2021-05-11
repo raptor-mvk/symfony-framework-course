@@ -16,6 +16,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+            FeedBundle:
+                is_bundle: true
+                type: annotation
+                dir: 'Entity'
+                prefix: 'FeedBundle\Entity'
+                alias: FeedBundle
         metadata_cache_driver:
             type: service
             id: doctrine.cache.memcached

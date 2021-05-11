@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\SaveUser\v4;
 
-use App\Client\StatsdAPIClient;
+use StatsdBundle\Client\StatsdAPIClient;
 use App\Controller\Api\SaveUser\v4\Input\SaveUserDTO;
 use App\Controller\Common\ErrorResponseTrait;
 use FOS\RestBundle\Controller\Annotations as Rest;

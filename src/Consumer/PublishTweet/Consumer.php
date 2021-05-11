@@ -49,11 +49,11 @@ class Consumer implements ConsumerInterface
             return $this->reject(sprintf('Tweet ID %s was not found', $message->getTweetId()));
         }
 
-        $followerIds = $this->subscriptionService->getFollowerIds($tweet->getAuthor()->getId());
+        $followers = $this->subscriptionService->getFollowers($tweet->getAuthor()->getId());
 
-        foreach ($followerIds as $followerId) {
-            $message = (new UpdateFeedMessage($tweet->getId(), $followerId))->toAMQPMessage();
-            $this->asyncService->publishToExchange(AsyncService::UPDATE_FEED, $message, (string)$followerId);
+        foreach ($followers as $follower) {
+            $message = (new UpdateFeedMessage($tweet, $follower))->toAMQPMessage();
+            $this->asyncService->publishToExchange(AsyncService::UPDATE_FEED, $message, (string)$follower->getId());
         }
 
         $this->entityManager->clear();

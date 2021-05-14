@@ -18,6 +18,9 @@ security:
         token:
             pattern: ^/api/v1/token
             security: false
+        health:
+            pattern: ^/api/v1/health
+            security: false
         main:
             stateless: true
             guard:
